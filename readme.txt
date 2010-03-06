@@ -13,9 +13,9 @@ Allows you to automatically create Wordpress photo galleries from any Facebook a
 
 This plugin allows you to quickly and easily generate Wordpress photo galleries from any Facebook album you can access.
 
-The idea was inspired by [Fotobook](http://www.aaronharp.com/dev/wp-fotobook/), though its approach is fundamentally different: while Fotobook's emphasis is on automation, this plugin allows a great deal of customization. With it you can create galleries in any Post or Page you like, right alongside your regular content. You do this simply by putting a "magic HTML tag" in the post's content - much like [Wordpress Shortcode](http://codex.wordpress.org/Gallery_Shortcode). Upon saving, the tag will automatically be populated with the Facebook album content. Presentation is fully customizable via parameters to the "magic tag" - you can choose to show only a subset of an album's photos, change the number of photos per column, show photo captions, and more.
+The idea was inspired by [Fotobook](http://wordpress.org/extend/plugins/fotobook/), though its approach is fundamentally different: while Fotobook's emphasis is on automation, this plugin allows a great deal of customization. With it you can create galleries in any Post or Page you like, right alongside your regular content. You do this simply by putting a "magic HTML tag" in the post's content - much like [Wordpress Shortcode](http://codex.wordpress.org/Gallery_Shortcode). Upon saving, the tag will automatically be populated with the Facebook album content. Presentation is fully customizable via parameters to the "magic tag" - you can choose to show only a subset of an album's photos, change the number of photos per column, show photo captions, and more.
 
-Also, Facebook Photo Fetcher does not limit you to just your own Facebook albums: you can create galleries from any album you can access. This is tremendously handy if you're not the main photo-poster in your social circle: just let your friend or family upload all those wedding pics, then import them directly to your blog!
+Also, Facebook Photo Fetcher does not limit you to just your own Facebook albums: you can create galleries from any album you can access. This is very handy if you're not the main photo-poster in your social circle: just let your friend or family upload all those wedding pics, then import them directly to your blog!
 
 Features:
 
@@ -47,11 +47,12 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 5. Now we need to get the ID of an album you'd like to import. Click the "Search for Albums" button; It will automatically connect to Facebook and produce a list of all the albums you can access, each with an associated ID number. Let's use the example 1234567890123456789.
 
 6. Create a new post or page and enter the following tags, replacing the sample ID number with the one you'd like import:
-`<!--FBGallery 1234567890123456789--><!--/FBGallery-->`
+
+`&lt;!--FBGallery 1234567890123456789--&gt;&lt;!--/FBGallery--&gt;`
 
 7. Click "Save", and you're done! You can now view your new album.
 
-Note: The above instructions only include the most basic setup; this plugin provides far more ways to customize the appearance and behavior of your gallery.  For ways to customize your gallery, please visit the [plugin's website](http://www.justin-klein.com/projects/facebook-photo-fetcher#customizing).
+Note: The above instructions only include the most basic setup; this plugin provides far more ways to customize the appearance and behavior of your gallery.  For customization instructions, please visit the [plugin's website](http://www.justin-klein.com/projects/facebook-photo-fetcher#customizing).
 
 
 == Frequently Asked Questions ==
