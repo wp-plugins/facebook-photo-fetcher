@@ -52,7 +52,7 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 7. Click "Save", and you're done! You can now view your new album.
 
-Note: The above instructions only include the most basic setup; this plugin provides far more ways to customize the appearance and behavior of your gallery.  For ways to customize your gallery, please visit the [plugin's website](http://www.justin-klein.com/projects/facebook-photo-fetcher#customizing).
+Note: The above instructions only include the most basic setup; this plugin provides far more ways to customize the appearance and behavior of your gallery.  For customization instructions, please visit the [plugin's website](http://www.justin-klein.com/projects/facebook-photo-fetcher#customizing).
 
 
 == Frequently Asked Questions ==
