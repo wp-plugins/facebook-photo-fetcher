@@ -15,7 +15,7 @@ This plugin allows you to quickly and easily generate Wordpress photo galleries 
 
 The idea was inspired by [Fotobook](http://wordpress.org/extend/plugins/fotobook/), though its approach is fundamentally different: while Fotobook's emphasis is on automation, this plugin allows a great deal of customization. With it you can create galleries in any Post or Page you like, right alongside your regular content. You do this simply by putting a "magic HTML tag" in the post's content - much like [Wordpress Shortcode](http://codex.wordpress.org/Gallery_Shortcode). Upon saving, the tag will automatically be populated with the Facebook album content. Presentation is fully customizable via parameters to the "magic tag" - you can choose to show only a subset of an album's photos, change the number of photos per column, show photo captions, and more.
 
-Also, Facebook Photo Fetcher does not limit you to just your own Facebook albums: you can create galleries from any album you can access. This is tremendously handy if you're not the main photo-poster in your social circle: just let your friend or family upload all those wedding pics, then import them directly to your blog!
+Also, Facebook Photo Fetcher does not limit you to just your own Facebook albums: you can create galleries from any album you can access. This is very handy if you're not the main photo-poster in your social circle: just let your friend or family upload all those wedding pics, then import them directly to your blog!
 
 Features:
 
