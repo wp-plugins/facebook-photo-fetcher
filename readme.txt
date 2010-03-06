@@ -47,7 +47,8 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 5. Now we need to get the ID of an album you'd like to import. Click the "Search for Albums" button; It will automatically connect to Facebook and produce a list of all the albums you can access, each with an associated ID number. Let's use the example 1234567890123456789.
 
 6. Create a new post or page and enter the following tags, replacing the sample ID number with the one you'd like import:
-`<!--FBGallery 1234567890123456789--><!--/FBGallery-->`
+
+`&lt;!--FBGallery 1234567890123456789--&gt;&lt;!--/FBGallery--&gt;`
 
 7. Click "Save", and you're done! You can now view your new album.
 
