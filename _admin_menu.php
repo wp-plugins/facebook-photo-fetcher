@@ -18,7 +18,7 @@ define('JGALLERY_ACTION_FETCHPOSTS', 4);
  */
 function fpf_add_admin_page()
 { 
-    add_options_page('Facebook Photo Fetcher', 'FB Photo Fetcher', 'administrator', "fb-photo-fetcher", 'fpf_admin_page');
+    add_options_page('Facebook Photo Fetcher Options', 'FB Photo Fetcher', 'administrator', "fb-photo-fetcher", 'fpf_admin_page');
 }
 
 
@@ -45,7 +45,8 @@ function fpf_admin_page()
         
     //Connect to Facebook and create an auth token.
     //Note: We only care about $token when the user is creating/saving a session; otherwise it's irrelevant and we just ignore it.
-    require_once('facebook-platform/facebook.php');
+    if(version_compare('5', PHP_VERSION, "<=")) require_once('facebook-platform/client/facebook.php');
+    else                                        require_once('facebook-platform/php4client/facebook.php');
     $facebook = new Facebook($appapikey, $appsecret, null, true);
     $facebook->api_client->secret = $appsecret;
     $token = $facebook->api_client->auth_createToken();
