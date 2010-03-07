@@ -67,7 +67,7 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 == Changelog ==
 
-= 1.0.2 (2010-03-07 =
+= 1.0.2 (2010-03-07) =
 * Add support for PHP4
 
 = 1.0.1 (2010-03-06) =
