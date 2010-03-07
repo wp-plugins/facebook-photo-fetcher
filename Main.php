@@ -43,4 +43,7 @@ function add_lightbox()
     }  
 }
 
+//Add a default stylesheet
+wp_enqueue_style('fpf', plugins_url(dirname(plugin_basename(__FILE__))).'/style.css' );
+
 ?>
