@@ -100,6 +100,7 @@ function fpf_find_tags($post_content)
     if( preg_match('/swapHead=(\d+)/', $retVal['startTag'], $matches) ) $retVal['swapHead'] = $matches[1]?true:false;
     if( preg_match('/hideHead=(\d+)/', $retVal['startTag'], $matches) ) $retVal['hideHead'] = $matches[1]?true:false;
     if( preg_match('/hideCaps=(\d+)/', $retVal['startTag'], $matches) ) $retVal['hideCaps'] = $matches[1]?true:false;
+    if( preg_match('/hideCred=(\d+)/', $retVal['startTag'], $matches) ) $retVal['hideCred'] = $matches[1]?true:false;
     if( preg_match('/noLB=(\d+)/', $retVal['startTag'], $matches) )     $retVal['noLB'] = $matches[1]?true:false;
     return $retVal;
 }
