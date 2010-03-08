@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 2.9.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -20,7 +20,7 @@ Also, Facebook Photo Fetcher does not limit you to just your own Facebook albums
 Features:
 
 * Uses Facebook's API to instantly create Wordpress photo galleries from Facebook albums.
-* Galleries are fully customizable: you can import complete albums, select album excerpts, album descriptions, photo captions, and more.
+* Galleries are fully customizable: you can import complete albums, select excerpts, random excerpts, album descriptions, photo captions, and more.
 * Galleries can be organized however you like: in any post or page, alone or alongside your other content.
 * Simple PHP template function allows programmers to manually embed albums in any template or widget.
 * Galleries can be created from any Facebook album you can access: yours or your friends'.
@@ -66,6 +66,11 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+
+= 1.0.3 (2010-03-08) =
+* Add support for "rand" argument (randomized album excerpts)
+* Add links to FAQ when fail to connect with facebook
+* Minor cleanups
 
 = 1.0.2 (2010-03-07) =
 * Add support for PHP4

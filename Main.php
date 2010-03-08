@@ -3,13 +3,19 @@
  * Plugin Name: Facebook Photo Fetcher
  * Description: Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.  
  * Author: Justin Klein
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author URI: http://www.justin-klein.com/
  * Plugin URI: http://www.justin-klein.com/projects/facebook-photo-fetcher
  */
 
+/*
+TODO:
+-Get photos given a Group ID: http://wiki.developers.facebook.com/index.php/Photos.get
+*/
+
 //The "magic tag" identifier
 $gallery_identifier = "FBGallery";
+$fpf_homepage = "http://www.justin-klein.com/projects/facebook-photo-fetcher";
 
 //The Facebook application API key
 $appapikey     = 'bda1991054a9cfd3db9858164a97724e';

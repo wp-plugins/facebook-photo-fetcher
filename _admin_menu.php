@@ -39,7 +39,7 @@ function fpf_add_plugin_links($links, $file)
 function fpf_admin_page()
 {
     global $appapikey, $appsecret;
-    global $gallery_identifier;
+    global $gallery_identifier, $fpf_homepage;
     global $opt_thumb_path, $opt_last_uid_search;
     global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
         
@@ -85,7 +85,7 @@ function fpf_admin_page()
     <b>&lt;!--<?=$gallery_identifier?> 1234567890123456789--&gt;&lt;!--/<?=$gallery_identifier?>--&gt;</b><br /><br />
     Whenever you save a post or page containing these tags, this plugin will automatically download the album information and insert its contents between them.  You are free to include any normal content you like before or after, as usual.<br /><br />
     The example number above (1234567890123456789) is an ID that tells the plugin which Facebook album you'd like to import.  To find a list of all available albums, you can use the "Search for Albums" feature below (visible once you've successfully connected).<br /><br />
-    That's all there is to it!  Note that this plugin supports quite a few additional parameters you can use to customize how your albums look - i.e. change the number of columns, show only a subset of photos, show or hide photo captions, etc.  You can also use its template functions to directly insert an album from PHP.  Full documentation and a demo gallery is available on the <a href="http://www.justin-klein.com/projects/facebook-photo-fetcher"><b>plugin homepage</b></a>.<br /><br />    
+    That's all there is to it!  Note that this plugin supports quite a few additional parameters you can use to customize how your albums look - i.e. change the number of columns, show only a subset of photos, show or hide photo captions, etc.  You can also use its template functions to directly insert an album from PHP.  Full documentation and a demo gallery is available on the <a href="<?=$fpf_homepage?>"><b>plugin homepage</b></a>.<br /><br />    
     Have fun!  And if you like this plugin, please don't forget to donate a few bucks to buy me a beer (or a pitcher).  I promise to enjoy every ounce of it :)<br /><br />
     <hr />
     
@@ -239,6 +239,7 @@ function fpf_admin_page()
   */
 function do_POST_actions($facebook)
 {
+    global $fpf_homepage;
     global $opt_thumb_path, $opt_last_uid_search;
     global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
     
@@ -272,8 +273,8 @@ function do_POST_actions($facebook)
         $new_session = $facebook->api_client->auth_getSession($token);
         $errorMsg = 0;
         if( !$new_session )             $errorMsg = "Failed to get an authenticated session.";
-        if( !$new_session['secret'])    $errorMsg = "Failed to get a session secret.";
-        if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session!";
+        if( !$new_session['secret'])    $errorMsg = "Failed to get a session secret.  See <a href=\"".$fpf_homepage."#faq3\">FAQ3</a>.";
+        if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session.  See <a href=\"".$fpf_homepage."#faq4\">FAQ4</a>.";
         
         //Success!  Save the key, secret, userID, and username
         if( !$errorMsg )
