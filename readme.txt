@@ -4,9 +4,9 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 2.9.2
-Stable tag: 1.0.3
+Stable tag: 1.1.0
 
-Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
+Allows you to automatically create Wordpress photo galleries from any Facebook album you can access, including groups.  Simple to use and highly customizable.
 
 
 == Description ==
@@ -23,7 +23,7 @@ Features:
 * Galleries are fully customizable: you can import complete albums, select excerpts, random excerpts, album descriptions, photo captions, and more.
 * Galleries can be organized however you like: in any post or page, alone or alongside your other content.
 * Simple PHP template function allows programmers to manually embed albums in any template or widget.
-* Galleries can be created from any Facebook album you can access: yours or your friends'.
+* Galleries can be created from any Facebook album you can access: yours, your friends', or your groups'.
 * Built-in support for automatically downloading and attaching Post Thumbnails to any post or page that includes a gallery.
 * Built-in support for LightBox: Photos appear in attractive pop-up overlays without the need for any other plugins.
 * Admin panel handles all setup for you: Just click "Connect", login once, and you're ready to start making albums.
@@ -66,6 +66,10 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+
+= 1.1.0 (2010-03-08) =
+* Add support for GROUP photo albums (in addition to USERs)
+* Some code restructuring
 
 = 1.0.3 (2010-03-08) =
 * Add support for "rand" argument (randomized album excerpts)
