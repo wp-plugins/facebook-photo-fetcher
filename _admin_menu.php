@@ -273,7 +273,7 @@ function do_POST_actions($facebook)
         $errorMsg = 0;
         if( !$new_session )             $errorMsg = "Failed to get an authenticated session.";
         if( !$new_session['secret'])    $errorMsg = "Failed to get a session secret.";
-        if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session!";
+        if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session.";
         
         //Success!  Save the key, secret, userID, and username
         if( !$errorMsg )
