@@ -154,15 +154,19 @@ function fpf_admin_page()
            $facebook->api_client->secret      = $session_sec;
            $albums = $facebook->api_client->photos_getAlbums($search_uid, null);
            $user = $facebook->api_client->users_getInfo($search_uid, array('name'));
+           
+           //NOTE: Remove this outer check to show albums for FAN PAGES as well as users
+           //(but those don't work because their AID's are weird, containing underscores, etc - why?)
            if( is_array($user) )
            {
-               echo "<b>Available Facebook albums for ".$user[0]['name']." (uid $search_uid ):</b><br /><small>";
-               if( is_array($albums) )
-               {
-                   foreach($albums as $album) echo '['.$fpf_identifier. ' ' . $album['aid'] . '] - <a href="'.$album['link'].'">'. $album['name'] .'</a><br />';
-               }
-               else echo "None found.<br />";
-               echo "</small><br />";
+                if( is_array($user) )    echo "<b>Available Facebook albums for ".$user[0]['name']." ( uid $search_uid ):</b><br />";
+                else                     echo "<b>Available Facebook Albums for ID $search_uid</b><br />";    
+                echo "<small>";
+                if( is_array($albums) )
+                    foreach($albums as $album) echo '['.$fpf_identifier. ' ' . $album['aid'] . '] - <a href="'.$album['link'].'">'. $album['name'] .'</a><br />';
+                else
+                    echo "None found.<br />";
+                echo "</small><br />";
            }
            else echo "<b>Userid $search_uid not found.</b><br /><br />";
        }

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 2.9.2
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -15,7 +15,7 @@ This plugin allows you to quickly and easily generate Wordpress photo galleries 
 
 The idea was inspired by [Fotobook](http://wordpress.org/extend/plugins/fotobook/), though its approach is fundamentally different: while Fotobook's emphasis is on automation, this plugin allows a great deal of customization. With it you can create galleries in any Post or Page you like, right alongside your regular content. You do this simply by putting a "magic HTML tag" in the post's content - much like [Wordpress Shortcode](http://codex.wordpress.org/Gallery_Shortcode). Upon saving, the tag will automatically be populated with the Facebook album content. Presentation is fully customizable via parameters to the "magic tag" - you can choose to show only a subset of an album's photos, change the number of photos per column, show photo captions, and more.
 
-Also, Facebook Photo Fetcher does not limit you to just your own Facebook albums: you can create galleries from any album you can access, including groups. This is very handy if you're not the main photo-poster in your social circle: just let your friend or family upload all those wedding pics, then import them directly to your blog!
+Also, Facebook Photo Fetcher does not limit you to just your own Facebook albums: you can create galleries from any album you can access, including groups and fanpages. This is very handy if you're not the main photo-poster in your social circle: just let your friend or family upload all those wedding pics, then import them directly to your blog!
 
 Features:
 
@@ -23,7 +23,7 @@ Features:
 * Galleries are fully customizable: you can import complete albums, select excerpts, random excerpts, album descriptions, photo captions, and more.
 * Galleries can be organized however you like: in any post or page, alone or alongside your other content.
 * Simple PHP template function allows programmers to manually embed albums in any template or widget.
-* Galleries can be created from any Facebook album you can access: yours, your friends', or your groups'.
+* Galleries can be created from any Facebook album you can access: yours, your friends', your groups', or your fanpages.
 * Built-in support for automatically downloading and attaching Post Thumbnails to any post or page that includes a gallery.
 * Built-in support for LightBox: Photos appear in attractive pop-up overlays without the need for any other plugins.
 * Admin panel handles all setup for you: Just click "Connect", login once, and you're ready to start making albums.
@@ -66,6 +66,9 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+
+= 1.1.4 (2010-03-10) =
+* Add isPage parameter - now you can get photos from fan pages!
 
 = 1.1.3 (2010-03-09) =
 * Include close/next/prev/loading images for lightbox
