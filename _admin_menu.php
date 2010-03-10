@@ -308,7 +308,7 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_sec, $new_session['secret'] );
             update_option( $opt_fb_sess_uid, $new_session['uid'] );
             update_option( $opt_fb_sess_uname, $user[0]['name'] );
-            fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 2, "http://www.facebook.com/profile.php?id=".$new_session['uid'] . " (" . $user[0]['name'] .")");
+            fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 2, $new_session['uid'] . " (" . $user[0]['name'] .")");
             ?><div class="updated"><p><strong><?= 'Facebook Session Saved. (UID: ' . $new_session['uid'] . ')' ?></strong></p></div><?
         }
         else
