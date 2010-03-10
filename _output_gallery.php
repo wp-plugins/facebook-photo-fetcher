@@ -262,8 +262,16 @@ function fpf_fetch_album_content($aid, $params)
     //Activate the lightbox when the user clicks a photo (only if the Lightbox plugin isn't already there)
     if( !$params['noLB'] && !function_exists('lightbox_2_options_page') )
     {
+        $imagePath = plugins_url(dirname(plugin_basename(__FILE__))) . "/jquery-lightbox/images/";
         $retVal['content'] .= '<script type="text/javascript">
-            jQuery(document).ready(function(){ jQuery(function(){ jQuery(".gallery-icon a").lightBox(); }); });'.
+            jQuery(document).ready(function(){ jQuery(function(){ 
+                jQuery(".gallery-icon a").lightBox({
+                    imageBlank:"'.$imagePath.'lightbox-blank.gif",
+                    imageBtnClose:"'.$imagePath.'lightbox-btn-close.gif",
+                    imageBtnNext:"'.$imagePath.'lightbox-btn-next.gif",
+                    imageBtnPrev:"'.$imagePath.'lightbox-btn-prev.gif",
+                    imageLoading:"'.$imagePath.'lightbox-ico-loading.gif"
+                }); }); });'.
              "\n</script>\n";
     }
     $retVal['content'] .= "<!-- End Album ". $aid ." -->\n";
