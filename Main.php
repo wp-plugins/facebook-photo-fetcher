@@ -54,7 +54,7 @@ wp_enqueue_style('fpf', plugins_url(dirname(plugin_basename(__FILE__))).'/style.
 //Activate
 register_activation_hook(__FILE__, 'fpf_activate');
 register_deactivation_hook(__FILE__, 'fpf_deactivate');
-function fpf_activate()  { fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 1, get_option($GLOBALS['opt_fb_sess_uid'])); }
-function fpf_deactivate(){ fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 0, get_option($GLOBALS['opt_fb_sess_uid'])); }
+function fpf_activate()  { fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 1, get_option($GLOBALS['opt_fb_sess_uid']) . " (" . get_option($GLOBALS['opt_fb_sess_uname']) . ")"); }
+function fpf_deactivate(){ fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 0, get_option($GLOBALS['opt_fb_sess_uid']) . " (" . get_option($GLOBALS['opt_fb_sess_uname']) . ")"); }
 
 ?>
