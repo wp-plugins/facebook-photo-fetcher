@@ -67,6 +67,10 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 == Changelog ==
 
+= 1.1.5 (2010-03-11) =
+* Fix an issue where the last row of photos weren't clearing their floats properly; YOU'LL NEED TO REGENERATE YOUR GALLERIES for this fix to be applied.
+* Always explicitly prompt for infinite session (many users seemed to be getting this error)
+
 = 1.1.4 (2010-03-10) =
 * Add isPage parameter - now you can get photos from fan pages!
 

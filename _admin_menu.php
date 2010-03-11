@@ -121,6 +121,7 @@ function fpf_admin_page()
         <input type="hidden" name="auth_token" value="<?= $token ?>" />
         <input type="hidden" name="popup" value="1" />      <?//Style the window as a popup?>
         <input type="hidden" name="skipcookie" value="1" /> <?//User must enter login info even if already logged in?>
+        <input type="hidden" name="req_perms" value="offline_access" /> <? //Require an infinite session?>
         <input type="hidden" name="v" value="1.0" />
         <input type="submit" class="button-secondary" id="step1Btn" value="<?= $my_uid?"Change Facebook Account":"Login to Facebook"; ?>" />
       </form>
@@ -298,7 +299,7 @@ function do_POST_actions($facebook)
         $errorMsg = 0;
         if( !$new_session )             $errorMsg = "Failed to get an authenticated session.";
         if( !$new_session['secret'])    $errorMsg = "Failed to get a session secret.  See <a href=\"".$fpf_homepage."#faq3\">FAQ3</a>.";
-        if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session.  See <a href=\"".$fpf_homepage."#faq4\">FAQ4</a>.";
+        if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session.";
         
         //Success!  Save the key, secret, userID, and username
         if( !$errorMsg )
