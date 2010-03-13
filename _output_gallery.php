@@ -318,6 +318,9 @@ function fpf_attach_thumbnail($post_ID, $thumb)
     $thumb_path = get_option($opt_thumb_path);
     if( !$thumb_path ) return;
     
+    //Make sure this is a versin of Wordpress that supports it
+    if( !function_exists('has_post_thumbnail') ) return;
+    
     //If the post already has a thumbnail, delete it before fetching the new one
     if(has_post_thumbnail($post_ID))
        wp_delete_attachment( get_post_thumbnail_id($post_ID), true ); 

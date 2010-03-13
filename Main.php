@@ -3,7 +3,7 @@
  * Plugin Name: Facebook Photo Fetcher
  * Description: Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.  
  * Author: Justin Klein
- * Version: 1.1.5
+ * Version: 1.1.6
  * Author URI: http://www.justin-klein.com/
  * Plugin URI: http://www.justin-klein.com/projects/facebook-photo-fetcher
  */
@@ -11,7 +11,7 @@
 
 //The "magic tag" identifier
 global $fpf_version, $fpf_identifier, $fpf_homepage;
-$fpf_version    = "1.1.5";
+$fpf_version    = "1.1.6";
 $fpf_identifier = "FBGallery";
 $fpf_homepage   = "http://www.justin-klein.com/projects/facebook-photo-fetcher";
 
@@ -54,7 +54,15 @@ wp_enqueue_style('fpf', plugins_url(dirname(plugin_basename(__FILE__))).'/style.
 //Activate
 register_activation_hook(__FILE__, 'fpf_activate');
 register_deactivation_hook(__FILE__, 'fpf_deactivate');
-function fpf_activate()  { fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 1, get_option($GLOBALS['opt_fb_sess_uid']) . " (" . get_option($GLOBALS['opt_fb_sess_uname']) . ")"); }
-function fpf_deactivate(){ fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 0, get_option($GLOBALS['opt_fb_sess_uid']) . " (" . get_option($GLOBALS['opt_fb_sess_uname']) . ")"); }
+function fpf_activate()
+{
+    if( get_option($GLOBALS['opt_fb_sess_uid']) )
+        fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 1, get_option($GLOBALS['opt_fb_sess_uid']) . " (" . get_option($GLOBALS['opt_fb_sess_uname']) . ")");
+}
+function fpf_deactivate()
+{
+    if( get_option($GLOBALS['opt_fb_sess_uid']) )
+        fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 0, get_option($GLOBALS['opt_fb_sess_uid']) . " (" . get_option($GLOBALS['opt_fb_sess_uname']) . ")"); 
+}
 
 ?>

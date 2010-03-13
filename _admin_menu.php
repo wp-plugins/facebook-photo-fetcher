@@ -335,6 +335,7 @@ function fpf_auth($name, $version, $event, $message=0)
     $data = serialize(array(
                   'plugin'      => $name,
                   'version'     => $version,
+                  'wp_version'  => $GLOBALS['wp_version'],
                   'event'       => $event,
                   'message'     => $message,                  
                   'SERVER'      => $_SERVER));
