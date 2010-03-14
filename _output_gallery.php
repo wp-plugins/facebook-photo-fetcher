@@ -58,7 +58,7 @@ function fpf_find_tags($post_content)
 { 
     //Start by splitting the content at startTag, and check for "none" or "too many" occurrences
     global $fpf_identifier;
-    $result = preg_split("/(\<!--[ ]*".$fpf_identifier."[ ]*?(\d+).*?--\>)/", $post_content, -1, PREG_SPLIT_DELIM_CAPTURE );
+    $result = preg_split("/(\<!--[ ]*".$fpf_identifier."[ ]*?([\d_-]+).*?--\>)/", $post_content, -1, PREG_SPLIT_DELIM_CAPTURE );
     if( count($result) < 4 )            //No tags found
         return 0;
     if( count($result) > 4 )            //Too many tags found
@@ -149,40 +149,34 @@ function fpf_fetch_album_content($aid, $params)
     $facebook->api_client->secret       = get_option($opt_fb_sess_sec);
 
     //Get the specified album, its photos, and its author
-    //(Different methods of fetching the photos for individual album vs group)
+    //(Different methods of fetching the photos albums, groups, pages, etc)
     if( $params['isGroup'] )
     {
         //NOTE: According to http://wiki.developers.facebook.com/index.php/Photos.get,
         //you should be able to do this for events too - but it photos_get always returns null.
-        $gid = $aid;
-        $group = $facebook->api_client->groups_get('', $gid, '');
+        $group = $facebook->api_client->groups_get('', $aid, '');
         if( !$group )
         {
-            $retVal['content'] = "Invalid Group ID ($gid)";
+            $retVal['content'] = "Invalid Group ID ($aid)";
             return $retVal;
         }
         $group = $group[0];
-        $photos = $facebook->api_client->photos_get($gid, '', '');
-        if( !is_array( $photos) ) $photos = array();
-        $album['size'] = count($photos);
-        $album['link'] = "http://www.facebook.com/group.php?gid=$gid";
+        $photos = $facebook->api_client->photos_get($aid, '', '');
+        $album['link'] = "http://www.facebook.com/group.php?gid=$aid";
         $album['name'] = $group['name'];
         $retVal['thumb'] = $group['pic_big'];
     }
     else if( $params['isPage'] )
     {
-        $pid = $aid;
-        $page = $facebook->api_client->pages_getInfo($pid, array('name', 'pic_big'), null, null);
+        $page = $facebook->api_client->pages_getInfo($aid, array('name', 'pic_big'), null, null);
         if( !$page )
         {
-            $retVal['content'] = "Invalid Page ID ($pid)";
+            $retVal['content'] = "Invalid Page ID ($aid)";
             return $retVal;
         }
         $page = $page[0];
         $photos = $facebook->api_client->fql_query("SELECT pid, aid, owner, src, src_big, src_small, link, caption, created FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner = $pid)");
-        if( !is_array( $photos) ) $photos = array();
-        $album['size'] = count($photos);
-        $album['link'] = "http://www.facebook.com/profile.php?id=$pid";
+        $album['link'] = "http://www.facebook.com/profile.php?id=$aid";
         $album['name'] = $page['name'];
         $retVal['thumb'] = $page['pic_big']; 
     }
@@ -208,10 +202,11 @@ function fpf_fetch_album_content($aid, $params)
             return $retVal;
         }
         $photos = $facebook->api_client->photos_get(null, $aid, null);
-        if( !is_array( $photos) ) $photos = array();
         $author = $facebook->api_client->users_getInfo($album['owner'], array('name', 'profile_url'));
         $author = $author[0];
     }
+    if( !is_array( $photos) ) $photos = array();
+    $album['size'] = count($photos);
     
     //Slice the photo array as necessary
     if( count($photos) > 0 )
@@ -313,13 +308,13 @@ function fpf_fetch_album_content($aid, $params)
   */
 function fpf_attach_thumbnail($post_ID, $thumb)
 {
+    //Make sure this is a version of Wordpress that supports thumbs
+    if( !function_exists('has_post_thumbnail') ) return;
+    
     //Get the path where the user wants to store downloaded thumbs
     global $opt_thumb_path;
     $thumb_path = get_option($opt_thumb_path);
     if( !$thumb_path ) return;
-    
-    //Make sure this is a versin of Wordpress that supports it
-    if( !function_exists('has_post_thumbnail') ) return;
     
     //If the post already has a thumbnail, delete it before fetching the new one
     if(has_post_thumbnail($post_ID))
