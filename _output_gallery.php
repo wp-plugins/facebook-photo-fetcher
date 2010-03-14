@@ -175,7 +175,7 @@ function fpf_fetch_album_content($aid, $params)
             return $retVal;
         }
         $page = $page[0];
-        $photos = $facebook->api_client->fql_query("SELECT pid, aid, owner, src, src_big, src_small, link, caption, created FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner = $pid)");
+        $photos = $facebook->api_client->fql_query("SELECT pid, aid, owner, src, src_big, src_small, link, caption, created FROM photo WHERE aid IN (SELECT aid FROM album WHERE owner = $aid)");
         $album['link'] = "http://www.facebook.com/profile.php?id=$aid";
         $album['name'] = $page['name'];
         $retVal['thumb'] = $page['pic_big']; 
