@@ -58,7 +58,7 @@ function fpf_find_tags($post_content)
 { 
     //Start by splitting the content at startTag, and check for "none" or "too many" occurrences
     global $fpf_identifier;
-    $result = preg_split("/(\<!--[ ]*".$fpf_identifier."[ ]*?([\d_-]+).*?--\>)/", $post_content, -1, PREG_SPLIT_DELIM_CAPTURE );
+    $result = preg_split("/(\<!--[ ]*".$fpf_identifier."[ ]*?([\d_-]+)[ ]*--\>)/", $post_content, -1, PREG_SPLIT_DELIM_CAPTURE );
     if( count($result) < 4 )            //No tags found
         return 0;
     if( count($result) > 4 )            //Too many tags found
