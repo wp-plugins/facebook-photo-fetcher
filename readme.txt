@@ -67,7 +67,7 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 == Changelog ==
 
-= 1.1.7 (2010-03-14) =
+= 1.1.7 (2010-03-13) =
 * Added support for 64-bit userIDs (aka albumID's with dashes and minuses)
 
 = 1.1.6 (2010-03-13) =
