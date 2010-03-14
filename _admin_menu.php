@@ -102,7 +102,7 @@ function fpf_admin_page()
     <h3>Overview</h3>
     This plugin allows you to create Wordpress photo galleries from any Facebook album you can access.<br /><br />
     To get started, you must first connect with your Facebook account using the button below.  Once connected, you can create a gallery by making a new Wordpress post or page and pasting in one line of special HTML, like this:<br /><br />
-    <b>&lt;!--<?=$fpf_identifier?> 1234567890123456789--&gt;&lt;!--/<?=$fpf_identifier?>--&gt;</b><br /><br />
+    <b>&lt;!--<?=$fpf_identifier?> 1234567890123456789 --&gt;&lt;!--/<?=$fpf_identifier?>--&gt;</b><br /><br />
     Whenever you save a post or page containing these tags, this plugin will automatically download the album information and insert its contents between them.  You are free to include any normal content you like before or after, as usual.<br /><br />
     The example number above (1234567890123456789) is an ID that tells the plugin which Facebook album you'd like to import.  To find a list of all available albums, you can use the "Search for Albums" feature below (visible once you've successfully connected).<br /><br />
     That's all there is to it!  Note that this plugin supports quite a few additional parameters you can use to customize how your albums look - i.e. change the number of columns, show only a subset of photos, show or hide photo captions, etc.  You can also use its template functions to directly insert an album from PHP.  Full documentation and a demo gallery is available on the <a href="<?=$fpf_homepage?>"><b>plugin homepage</b></a>.<br /><br />    
