@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * This file handles the creation of a Facebook Gallery.
  * When a page containing the "magic tag" is saved, this function will:

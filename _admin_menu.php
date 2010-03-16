@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * This file handles the plugin's ADMIN PAGE
  */
@@ -98,37 +98,37 @@ function fpf_admin_page()
       </div>
     <hr />  
     
-    <?//SECTION - Overview?>
+    <?php //SECTION - Overview?>
     <h3>Overview</h3>
     This plugin allows you to create Wordpress photo galleries from any Facebook album you can access.<br /><br />
     To get started, you must first connect with your Facebook account using the button below.  Once connected, you can create a gallery by making a new Wordpress post or page and pasting in one line of special HTML, like this:<br /><br />
-    <b>&lt;!--<?=$fpf_identifier?> 1234567890123456789 --&gt;&lt;!--/<?=$fpf_identifier?>--&gt;</b><br /><br />
+    <b>&lt;!--<?php echo $fpf_identifier?> 1234567890123456789 --&gt;&lt;!--/<?php echo $fpf_identifier?>--&gt;</b><br /><br />
     Whenever you save a post or page containing these tags, this plugin will automatically download the album information and insert its contents between them.  You are free to include any normal content you like before or after, as usual.<br /><br />
     The example number above (1234567890123456789) is an ID that tells the plugin which Facebook album you'd like to import.  To find a list of all available albums, you can use the "Search for Albums" feature below (visible once you've successfully connected).<br /><br />
-    That's all there is to it!  Note that this plugin supports quite a few additional parameters you can use to customize how your albums look - i.e. change the number of columns, show only a subset of photos, show or hide photo captions, etc.  You can also use its template functions to directly insert an album from PHP.  Full documentation and a demo gallery is available on the <a href="<?=$fpf_homepage?>"><b>plugin homepage</b></a>.<br /><br />    
+    That's all there is to it!  Note that this plugin supports quite a few additional parameters you can use to customize how your albums look - i.e. change the number of columns, show only a subset of photos, show or hide photo captions, etc.  You can also use its template functions to directly insert an album from PHP.  Full documentation and a demo gallery is available on the <a href="<?php echo $fpf_homepage?>"><b>plugin homepage</b></a>.<br /><br />    
     Have fun!  And if you like this plugin, please don't forget to donate a few bucks to buy me a beer (or a pitcher).  I promise to enjoy every ounce of it :)<br /><br />
     <hr />
     
-    <?//SECTION - Connect to Facebook.  See note at top of file.?>
-    <h3>Connect with Facebook</h3><?
+    <?php //SECTION - Connect to Facebook.  See note at top of file.?>
+    <h3>Connect with Facebook</h3><?php
     if( $my_uid ) echo "<i>This plugin is successfully connected with <b>$my_name</b>'s Facebook account and is ready to create galleries.</i>";
     else          echo "Before this plugin can be used, you must connect it with your Facebook account.<br /><br />Please click the following button and complete the pop-up login form.  When finished, click the button again to save your session. You will only have to do this once.";
     ?>
       <br /><br />
       <div id="step1wrap">
       <form method="get" id="step1Frm" action="http://www.facebook.com/login.php" target="_blank">
-        <input type="hidden" name="api_key" value="<?= $appapikey ?>" />
-        <input type="hidden" name="auth_token" value="<?= $token ?>" />
-        <input type="hidden" name="popup" value="1" />      <?//Style the window as a popup?>
-        <input type="hidden" name="skipcookie" value="1" /> <?//User must enter login info even if already logged in?>
-        <input type="hidden" name="req_perms" value="offline_access" /> <? //Require an infinite session?>
+        <input type="hidden" name="api_key" value="<?php echo $appapikey ?>" />
+        <input type="hidden" name="auth_token" value="<?php echo $token ?>" />
+        <input type="hidden" name="popup" value="1" />      <?php //Style the window as a popup?>
+        <input type="hidden" name="skipcookie" value="1" /> <?php //User must enter login info even if already logged in?>
+        <input type="hidden" name="req_perms" value="offline_access" /> <?php  //Require an infinite session?>
         <input type="hidden" name="v" value="1.0" />
-        <input type="submit" class="button-secondary" id="step1Btn" value="<?= $my_uid?"Change Facebook Account":"Login to Facebook"; ?>" />
+        <input type="submit" class="button-secondary" id="step1Btn" value="<?php echo $my_uid?"Change Facebook Account":"Login to Facebook"; ?>" />
       </form>
       </div>
       <div id="step2wrap" style="display:none;">
       <form method="post" action="">
-        <input type="hidden" name="save-facebook-session" value="<?= $token ?>" />
+        <input type="hidden" name="save-facebook-session" value="<?php echo $token ?>" />
         <input type="submit" class="button-secondary" style="font-weight:bold;background:#00FF00;" value="Save Facebook Session" />
       </form>
       </div>
@@ -142,13 +142,13 @@ function fpf_admin_page()
       </script>
     <hr />
 
-    <?
+    <?php
     //All features below here require connection with facebook
     if( $my_uid ):
     ?>
         
-       <?//SECTION - Search for albums?>
-       <h3>Search for Albums</h3><?
+       <?php //SECTION - Search for albums?>
+       <h3>Search for Albums</h3><?php
        if( $action_performed == JGALLERY_ACTION_SEARCH )
        {
            $facebook->api_client->session_key = $session_key;
@@ -174,34 +174,34 @@ function fpf_admin_page()
        ?>
        <form name="listalbums" method="post" action="">
            To get a list of album ID's that you can use to create galleries, enter a Facebook user ID below and click "Search."<br /><br />
-           Your UserID is <b><?=$my_uid?></b>. To get a friend's ID, go to their profile and click "View Videos of xx."  The URL will end in <b>?of=1234567</b>; this number is their ID.<br /><br /> 
-           <input type="text" name="<?=$opt_last_uid_search?>" value="<?=$search_uid?>" size="20"><br /><br />
+           Your UserID is <b><?php echo $my_uid?></b>. To get a friend's ID, go to their profile and click "View Videos of xx."  The URL will end in <b>?of=1234567</b>; this number is their ID.<br /><br /> 
+           <input type="text" name="<?php echo $opt_last_uid_search?>" value="<?php echo $search_uid?>" size="20"><br /><br />
            <input type="submit" class="button-secondary"  name="Submit" value="Search" />
        </form>
        <hr />
 
 
-       <?//SECTION - Thumbs?>
+       <?php //SECTION - Thumbs?>
        <h3>Album Thumbnails</h3>
-       <?
+       <?php
          if( !isset($GLOBALS['add-from-server']) ):
             echo 'If you install the <a target="_blank" href="http://wordpress.org/extend/plugins/add-from-server">Add From Server</a> plugin, album thumbnails can be automatically copied from Facebook and attached to your galleries.  If you do not install it, the galleries will still work fine but they will not automatically have <a target="_blank" href="http://markjaquith.wordpress.com/2009/12/23/new-in-wordpress-2-9-post-thumbnail-images/">Post Thumbnails</a>.';
          else: 
             echo 'This plugin can automatically download album thumbnails from Facebook and attach them as Wordpress <a target="_blank" href="http://markjaquith.wordpress.com/2009/12/23/new-in-wordpress-2-9-post-thumbnail-images/">Post Thumbnails</a>.  Please select the full path to where you\'d like the thumbnails downloaded, or leave it blank to skip them.<br /><br />';
        ?>
        <form name="formOptions" method="post" action="">
-           <input type="text" name="<?= $opt_thumb_path; ?>" value="<?= $thumb_path; ?>" size="90" <?= (isset($GLOBALS['add-from-server'])?"":"disabled='disabled'")?>>
+           <input type="text" name="<?php echo $opt_thumb_path; ?>" value="<?= $thumb_path; ?>" size="90" <?= (isset($GLOBALS['add-from-server'])?"":"disabled='disabled'")?>>
            <br />
-            (Hint: Your document root is <?=$_SERVER["DOCUMENT_ROOT"]?>)
+            (Hint: Your document root is <?php echo $_SERVER["DOCUMENT_ROOT"]?>)
            <br /><br />
            <input type="submit" class="button-secondary" name="Submit" value="Update Options" />
            <input type="hidden" name="options_updated" value="Y">
        </form>
-       <?endif;?>
+       <?php endif;?>
        <hr />
         
 
-       <? //SECTION - Fetch all albums ?>
+       <?php //SECTION - Fetch all albums ?>
        <h3>Refresh Albums from Facebook</h3>
            This will scan all your posts and pages for galleries created with this plugin, 
            and regenerate each one it finds by re-fetching its information from Facebook.
@@ -214,7 +214,7 @@ function fpf_admin_page()
               <input type="hidden" name="fetch_posts" value="Y">
               <input type="submit" class="button-secondary" name="Submit" value="Re-Fetch All Albums in Posts" />
             </form>
-        <?  if( $action_performed == JGALLERY_ACTION_FETCHPAGES || $action_performed == JGALLERY_ACTION_FETCHPOSTS )
+        <?php  if( $action_performed == JGALLERY_ACTION_FETCHPAGES || $action_performed == JGALLERY_ACTION_FETCHPOSTS )
             {
                 //Increase the timelimit of the script to make sure it can finish
                 if(!ini_get('safe_mode') && !strstr(ini_get('disabled_functions'), 'set_time_limit')) set_time_limit(500);
@@ -252,9 +252,9 @@ function fpf_admin_page()
             }
         ?>
         <hr />
-        <?endif; //Must connect with Facebook?>
+        <?php endif; //Must connect with Facebook?>
     </div>
-    <?
+    <?php
 }
 
 
@@ -272,13 +272,13 @@ function do_POST_actions($facebook)
     {
         $action_performed = JGALLERY_ACTION_UPDATE;
         update_option( $opt_thumb_path, $_POST[ $opt_thumb_path ] );
-        ?><div class="updated"><p><strong><?= 'Options saved.'?></strong></p></div><?
+        ?><div class="updated"><p><strong><?php echo 'Options saved.'?></strong></p></div><?php
     }
     else if( isset($_POST[ $opt_last_uid_search ]) )    //User clicked "Search"
     {
         $action_performed = JGALLERY_ACTION_SEARCH;
         update_option( $opt_last_uid_search, $_POST[ $opt_last_uid_search ] );
-        ?><div class="updated"><p><strong><?= 'Album search completed.'?></strong></p></div><?
+        ?><div class="updated"><p><strong><?php echo 'Album search completed.'?></strong></p></div><?php
     }
     else if( isset($_POST[ 'fetch_pages' ]) )          //User clicked "Fetch Pages"
     {
@@ -310,7 +310,7 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_uid, $new_session['uid'] );
             update_option( $opt_fb_sess_uname, $user[0]['name'] );
             fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 2, $new_session['uid'] . " (" . $user[0]['name'] .")");
-            ?><div class="updated"><p><strong><?= 'Facebook Session Saved. (UID: ' . $new_session['uid'] . ')' ?></strong></p></div><?
+            ?><div class="updated"><p><strong><?php echo 'Facebook Session Saved. (UID: ' . $new_session['uid'] . ')' ?></strong></p></div><?php
         }
         else
         {
@@ -319,7 +319,7 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_uid, 0 );
             update_option( $opt_fb_sess_uname, 0 );
             fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 3, $errorMsg);
-            ?><div class="updated"><p><strong><?= 'An error occurred while linking with Facebook: ' . $errorMsg ?></strong></p></div><?
+            ?><div class="updated"><p><strong><?php echo 'An error occurred while linking with Facebook: ' . $errorMsg ?></strong></p></div><?php
         }
     }
     return $action_performed;
