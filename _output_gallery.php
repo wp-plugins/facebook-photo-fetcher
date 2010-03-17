@@ -198,7 +198,7 @@ function fpf_fetch_album_content($aid, $params)
         $album = $album[0];
         if( !$album )
         {
-            $retVal['content'] = "Unable to connect to Facebook.  Please check its options and verify that it's been associated with your Facebook account.";
+            $retVal['content'] = "Facebook Photo Fetcher was unable to connect to Facebook.  Please check its options and verify that it's been associated with your account, then re-fetch this album.";
             return $retVal;
         }
         $photos = $facebook->api_client->photos_get(null, $aid, null);
