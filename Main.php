@@ -11,7 +11,7 @@
 
 //The "magic tag" identifier
 global $fpf_version, $fpf_identifier, $fpf_homepage;
-$fpf_version    = "1.1.11";
+$fpf_version    = "1.1.11.1";
 $fpf_identifier = "FBGallery";
 $fpf_homepage   = "http://www.justin-klein.com/projects/facebook-photo-fetcher";
 
