@@ -264,7 +264,7 @@ function fpf_admin_page()
   */
 function do_POST_actions($facebook)
 {
-    global $fpf_homepage;
+    global $fpf_name, $fpf_version, $fpf_homepage;
     global $opt_thumb_path, $opt_last_uid_search;
     global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
     
@@ -309,7 +309,7 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_sec, $new_session['secret'] );
             update_option( $opt_fb_sess_uid, $new_session['uid'] );
             update_option( $opt_fb_sess_uname, $user[0]['name'] );
-            fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 2, $new_session['uid'] . " (" . $user[0]['name'] .")");
+            fpf_auth($fpf_name, $fpf_version, 2, "SET: " . $new_session['uid'] . " (" . $user[0]['name'] .")");
             ?><div class="updated"><p><strong><?php echo 'Facebook Session Saved. (UID: ' . $new_session['uid'] . ')' ?></strong></p></div><?php
         }
         else
@@ -318,7 +318,7 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_sec, 0 );
             update_option( $opt_fb_sess_uid, 0 );
             update_option( $opt_fb_sess_uname, 0 );
-            fpf_auth(plugin_basename( __FILE__ ), $GLOBALS['fpf_version'], 3, $errorMsg);
+            fpf_auth($fpf_name, $fpf_version, 3, $errorMsg);
             ?><div class="updated"><p><strong><?php echo 'An error occurred while linking with Facebook: ' . $errorMsg ?></strong></p></div><?php
         }
     }
