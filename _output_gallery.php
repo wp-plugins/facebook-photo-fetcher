@@ -208,6 +208,18 @@ function fpf_fetch_album_content($aid, $params)
     if( !is_array( $photos) ) $photos = array();
     $album['size'] = count($photos);
     
+    //Store the filename of the album thumbnail when found
+    //Note: we want the fullsize, because when WP uploads it it'll auto-resize it to an appropriate thumbnail for us.
+    //We must do this here, prior to slicing down the array of photos.
+    if( isset($album['cover_pid']) && !isset($retVal['thumb']) && isset($GLOBALS['add-from-server']) )
+    {
+        foreach($photos as $photo)
+        {
+            if( strcmp($photo['pid'],$album['cover_pid']) == 0 )
+                $retVal['thumb'] = $photo['src_big'];
+        }
+    }
+    
     //Slice the photo array as necessary
     if( count($photos) > 0 )
     {
@@ -254,11 +266,6 @@ function fpf_fetch_album_content($aid, $params)
     $retVal['content'] .= "<div class='gallery'>\n";
     foreach($photos as $photo)
     {
-        //Store the filename of the album thumbnail when found
-        //Note: we want the fullsize, because when WP uploads it it'll auto-resize it to an appropriate thumbnail for us.
-        if( isset($album['cover_pid']) && strcmp($photo['pid'],$album['cover_pid']) == 0 )
-            $retVal['thumb'] = $photo['src_big'];
-        
         //Output this photo (must get rid of [], or WP will try to run it as shortcode)
         $caption = preg_replace("/\[/", "(", $photo['caption']);
         $caption = preg_replace("/\]/", ")", $caption);
