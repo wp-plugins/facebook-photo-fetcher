@@ -126,17 +126,29 @@ function fpf_admin_page()
         <input type="submit" class="button-secondary" id="step1Btn" value="<?php echo $my_uid?"Change Facebook Account":"Login to Facebook"; ?>" />
       </form>
       </div>
-      <div id="step2wrap" style="display:none;">
+      
+      <!-- NEW STEP!  Added when FB changed their policies in June, 2010... -->
+      <div id="step2wrap" style="display:none">
+          <a id="step2link" style="font-weight:bold;background:#00FF00;border:1px solid grey;padding:2px;width:auto;" target="newperms" href="http://www.facebook.com/connect/prompt_permission.php?api_key=<?php echo $appapikey?>&next=http://www.facebook.com/connect/login_success.html&cancel=http://www.facebook.com/connect/login_failure.html&display=wap&ext_perm=user_photos,friends_photos">Grant Photo Permissions</a>
+      </div>
+            
+      <div id="step3wrap" style="display:none;">
       <form method="post" action="">
         <input type="hidden" name="save-facebook-session" value="<?php echo $token ?>" />
         <input type="submit" class="button-secondary" style="font-weight:bold;background:#00FF00;" value="Save Facebook Session" />
       </form>
       </div>
+            
       <script type="text/javascript">
       jQuery(document).ready(function() {
     	  jQuery('#step1Frm').submit(function() {
         	  jQuery('#step1wrap').toggle();
         	  jQuery('#step2wrap').toggle();
+        	});
+
+    	  jQuery('#step2link').click(function() {
+        	  jQuery('#step2wrap').toggle();
+        	  jQuery('#step3wrap').toggle();
         	});
     	});
       </script>
