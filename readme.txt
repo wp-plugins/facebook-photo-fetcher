@@ -42,7 +42,7 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 3. Head over to Settings -> FB Photo Fetcher.
 
-4. Click the "Login to Facebook" button to popup a Facebook login page. Enter your information, click "Login", then close the popup and click "Save Facebook Session." It should now say "This plugin is successfully connected with xxxxxxx's Facebook account."
+4. Click the "Login to Facebook" button to popup a Facebook login page.  Enter your information, click "Login", then close the popup.  Next, click "Grant Photo Permissions."  Accept the permissions in the popup and when it says "Success," close it.  Finally, click "Save Facebook Session."  It should now say "This plugin is successfully connected with xxxxxxx's Facebook account."
 
 5. Now we need to get the ID of an album you'd like to import. Click the "Search for Albums" button; It will automatically connect to Facebook and produce a list of all the albums you can access, each with an associated ID number. Let's use the example 1234567890123456789.
 
