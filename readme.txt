@@ -67,7 +67,7 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 == Changelog ==
 
-= 1.2.0 (2010-08-07)
+= 1.2.0 (2010-08-07) =
 * Update the Facebook client library so it'll place nice with newer plugins
 * The minimum requirement is now PHP5.
 
