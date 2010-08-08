@@ -66,6 +66,8 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+= 1.2.1 (2010-08-07) = 
+* Something got left out of the 1.2.0 commit...
 
 = 1.2.0 (2010-08-07) =
 * Update the Facebook client library so it'll place nice with newer plugins
