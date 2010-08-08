@@ -62,11 +62,24 @@ function fpf_admin_page()
     global $fpf_identifier, $fpf_homepage;
     global $opt_thumb_path, $opt_last_uid_search;
     global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
+    
+    ?><div class="wrap">
+      <h2>Facebook Photo Fetcher</h2><?php
+      
+    //Show a warning if they're using a naughty other plugin
+    if( class_exists('Facebook') )
+    {
+        fpf_auth($fpf_name, $fpf_version, 3, "API WARNING!! Facebook already detected." );
+        ?><div class="error"><p><strong>Warning:</strong> Another plugin has included the Facebook API throughout all of Wordpress.  I suggest you contact that plugin's author and ask them to include it only in pages where it's actually needed.<br /><br />Things may work fine as-is, but only if the API version included by the other plugin is at least as recent as the one required by Facebook Photo Fetcher.</p></div><?php
+    }
+    else
+    {
+        if(version_compare('5', PHP_VERSION, "<=")) require_once('facebook-platform/php/facebook.php');
+        else                                        die("Sorry, but as of version 1.2.0, Facebook Photo Fetcher requires PHP5.");
+    }
         
     //Connect to Facebook and create an auth token.
     //Note: We only care about $token when the user is creating/saving a session; otherwise it's irrelevant and we just ignore it.
-    if(version_compare('5', PHP_VERSION, "<=")) require_once('facebook-platform/php/facebook.php');
-    else                                        die("Sorry, but as of version 1.2.0, Facebook Photo Fetcher requires PHP5.");
     $facebook = new Facebook($appapikey, $appsecret, null, true);
     $facebook->api_client->secret = $appsecret;
     $token = $facebook->api_client->auth_createToken();
@@ -86,9 +99,8 @@ function fpf_admin_page()
     if(!$search_uid) $search_uid = $my_uid;
     
     //Finally, OUTPUT THE ADMIN PAGE.
-    ?><div class="wrap">
-      <h2>Facebook Photo Fetcher</h2>
-      <div style="position:absolute; right:60px; margin-top:-50px;">
+    ?>
+      <div style="position:absolute; right:30px; margin-top:-50px;">
       <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
         <input type="hidden" name="cmd" value="_s-xclick" />
         <input type="hidden" name="hosted_button_id" value="L32NVEXQWYN8A" />
