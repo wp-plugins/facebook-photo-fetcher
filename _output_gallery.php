@@ -142,8 +142,8 @@ function fpf_fetch_album_content($aid, $params)
     //Connect to Facebook and restore our user's session
     global $appapikey, $appsecret;
     global $opt_fb_sess_key, $opt_fb_sess_sec;
-    if(version_compare('5', PHP_VERSION, "<=")) require_once('facebook-platform/client/facebook.php');
-    else                                        require_once('facebook-platform/php4client/facebook.php');
+    if(version_compare('5', PHP_VERSION, "<=")) require_once('facebook-platform/php/facebook.php');
+    else                                        die("Sorry, but as of version 1.2.0, Facebook Photo Fetcher requires PHP5.");
     $facebook = new Facebook($appapikey, $appsecret, null, true);  
     $facebook->api_client->session_key  = get_option($opt_fb_sess_key);
     $facebook->api_client->secret       = get_option($opt_fb_sess_sec);
