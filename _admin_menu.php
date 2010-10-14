@@ -267,6 +267,11 @@ function fpf_admin_page()
                         echo "No gallery tag found.<br />";
                     else
                     {
+                        //Categories need special handling; before re-saving the post, we need to explicitly place a list of cats or they'll be lost.
+                        $cats = get_the_category($page->ID);
+                        $page->post_category = array();
+                        foreach($cats as $cat) array_push($page->post_category, $cat->cat_ID);
+                        
                         echo "<b>Fetching...</b>";
                         wp_insert_post( $page );
                         echo "<b>Done.</b><br />";
