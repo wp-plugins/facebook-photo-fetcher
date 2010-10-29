@@ -335,7 +335,14 @@ function do_POST_actions($facebook)
         //which we'll use from now on to reconnect as the authenticated user.
         //See important note at the top of the file for why this works (it's an infinite session)
         $token = $_POST[ 'save-facebook-session' ];
-        $new_session = $facebook->api_client->auth_getSession($token);
+        try
+        {
+            $new_session = $facebook->api_client->auth_getSession($token);
+        }
+        catch(Exception $e)
+        {
+            $new_session = 0;
+        }
         $errorMsg = 0;
         if( !$new_session )             $errorMsg = "Failed to get an authenticated session.";
         if( !$new_session['secret'])    $errorMsg = "Failed to get a session secret.  See <a href=\"".$fpf_homepage."#faq3\">FAQ3</a>.";
