@@ -69,7 +69,6 @@ function fpf_admin_page()
     //Show a warning if they're using a naughty other plugin
     if( class_exists('Facebook') )
     {
-        fpf_auth($fpf_name, $fpf_version, 3, "API WARNING!! Facebook already detected." );
         ?><div class="error"><p><strong>Warning:</strong> Another plugin has included the Facebook API throughout all of Wordpress.  I suggest you contact that plugin's author and ask them to include it only in pages where it's actually needed.<br /><br />Things may work fine as-is, but only if the API version included by the other plugin is at least as recent as the one required by Facebook Photo Fetcher.</p></div><?php
     }
     else
@@ -366,7 +365,6 @@ function do_POST_actions($facebook)
             update_option( $opt_fb_sess_sec, 0 );
             update_option( $opt_fb_sess_uid, 0 );
             update_option( $opt_fb_sess_uname, 0 );
-            fpf_auth($fpf_name, $fpf_version, 3, $errorMsg);
             ?><div class="updated"><p><strong><?php echo 'An error occurred while linking with Facebook: ' . $errorMsg ?></strong></p></div><?php
         }
     }
