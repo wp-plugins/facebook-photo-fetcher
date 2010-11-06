@@ -153,3 +153,8 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 = 1.0.0 (2010-03-06) =
 * First Release
+
+
+== Support ==
+
+Please direct all support requests [here](http://www.justin-klein.com/projects/facebook-photo-fetcher#feedback)
