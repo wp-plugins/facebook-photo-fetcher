@@ -105,6 +105,8 @@ function fpf_find_tags($post_content)
     //1.1.4
     if( preg_match('/isPage=(\d+)/', $retVal['startTag'], $matches) )   $retVal['isPage']   = $matches[1];
     if( preg_match('/isEvent=(\d+)/', $retVal['startTag'], $matches) )  $retVal['isEvent']  = $matches[1];
+    //1.2.9
+    if( preg_match('/orderby=(\w+)/', $retVal['startTag'], $matches) )  $retVal['orderby']  = $matches[1];
     return $retVal;
 }
 
@@ -133,7 +135,8 @@ function fpf_fetch_album_content($aid, $params)
                       'rand'    => false,           //Randomly select n photos from the album (or from photos between "start" and "max")
                       'isGroup' => false,           //The ID number specifies a GROUP ID instead of an albumID
                       'isPage'  => false,           //The ID number specifies a FAN PAGE ID instad of an albumID.  It'll return all photos in all albums on that page (for now).
-                      'isEvent' => false);          //NOT YET SUPPORTED - the fql query doesn't return what it should...
+                      'isEvent' => false,           //NOT YET SUPPORTED - the fql query doesn't return what it should...
+                      'orderby' => 'normal');       //Can be "normal" or "reverse" (for now)
     $params = array_merge( $defaults, $params );
     $itemwidth = $params['cols'] > 0 ? floor(100/$params['cols']) : 100;
     $itemwidth -= (0.5/$params['cols']); //For stupid IE7, which rounds fractional percentages UP (shave off 0.5%, or the last item will wrap to the next row)
@@ -221,6 +224,12 @@ function fpf_fetch_album_content($aid, $params)
             if( strcmp($photo['pid'],$album['cover_pid']) == 0 )
                 $retVal['thumb'] = $photo['src_big'];
         }
+    }
+    
+    //Reorder the photos if necessary
+    if( $params['orderby'] == 'reverse' )
+    {
+        $photos = array_reverse($photos);
     }
     
     //Slice the photo array as necessary
