@@ -29,6 +29,7 @@ define('JGALLERY_ACTION_UPDATE', 1);
 define('JGALLERY_ACTION_SEARCH', 2);
 define('JGALLERY_ACTION_FETCHPAGES', 3);
 define('JGALLERY_ACTION_FETCHPOSTS', 4);
+define('JGALLERY_ACTION_SAVECRON', 5);
 
 
 /*
@@ -86,7 +87,7 @@ function fpf_admin_page()
     
     //Check $_POST for what we're doing, show a message, update any necessary options,
     //and get the corresponding $action_performed.
-    $action_performed = do_POST_actions($facebook);
+    $action_performed = fpf_do_POST_actions($facebook);
     
     //Get all the options from the database
     $thumb_path = get_option($opt_thumb_path);
@@ -229,20 +230,27 @@ function fpf_admin_page()
        <h3>Refresh Albums from Facebook</h3>
            This will scan all your posts and pages for galleries created with this plugin, 
            and regenerate each one it finds by re-fetching its information from Facebook.
-           The only reason to use this would be if you've changed or updated something in many of your albums and want those changes to be reflected here as well.  It can be quite slow if you have lots of galleries, so use with caution.<br /><br />
+           The only reason to use this would be if you've changed or updated something in many of your albums and want those changes to be reflected here as well.  It can be slow if you have lots of galleries, so use with caution.<br /><br />
+           
+           <div class="postbox" style="width:400px; height:80px; padding:10px; float:left; text-align:center;">
            <form name="fetchallposts" method="post" action="">
              <input type="hidden" name="fetch_pages" value="Y">
              <input type="submit" class="button-secondary" name="Submit" value="Re-Fetch All Albums in Pages" />
             </form>
+            <br />
             <form name="fetchallpages" method="post" action="">
               <input type="hidden" name="fetch_posts" value="Y">
               <input type="submit" class="button-secondary" name="Submit" value="Re-Fetch All Albums in Posts" />
             </form>
-        <?php  if( $action_performed == JGALLERY_ACTION_FETCHPAGES || $action_performed == JGALLERY_ACTION_FETCHPOSTS )
+        </div>
+        <?php 
+        if( function_exists('fpf_output_cron_panel') ) fpf_output_cron_panel();
+        ?>
+        <br clear="all" />
+            <?php
+            //When we click one of the "fetch now" buttons  
+            if( $action_performed == JGALLERY_ACTION_FETCHPAGES || $action_performed == JGALLERY_ACTION_FETCHPOSTS )
             {
-                //Increase the timelimit of the script to make sure it can finish
-                if(!ini_get('safe_mode') && !strstr(ini_get('disabled_functions'), 'set_time_limit')) set_time_limit(500);
-                
                 //Get the collection of pages or posts
                 if( $action_performed == JGALLERY_ACTION_FETCHPAGES )
                 {
@@ -254,30 +262,16 @@ function fpf_admin_page()
                     echo "<b>Checking All Posts for Facebook Albums</b>:<br />";
                     $pages = get_posts('post_type=post&numberposts=-1&post_status=publish');
                 }
-                    
-                //Go through each post/page and if it contains the magic tags, re-save it (which will cause the wp_insert_post filter below to run)
-                echo "<small>";
-                $total = count($pages);
-                $index = 0;
-                foreach($pages as $page)
-                {
-                    $index++;
-                    echo "Checking $index/$total: $page->post_title......";
-                    if( !fpf_find_tags($page->post_content) )
-                        echo "No gallery tag found.<br />";
-                    else
-                    {
-                        //Categories need special handling; before re-saving the post, we need to explicitly place a list of cats or they'll be lost.
-                        $cats = get_the_category($page->ID);
-                        $page->post_category = array();
-                        foreach($cats as $cat) array_push($page->post_category, $cat->cat_ID);
-                        
-                        echo "<b>Fetching...</b>";
-                        wp_insert_post( $page );
-                        echo "<b>Done.</b><br />";
-                    }
-                } 
-                echo "</small>";
+
+                echo "<div class='postbox' style='width:90%;padding:10px;'><pre>";
+                echo fpf_refetch_all($pages, true);
+                echo "</pre></div>";
+            }
+            
+            //When we click "Save" in the cron box, either schedule or clear a cron job!
+            if( $action_performed == JGALLERY_ACTION_SAVECRON )
+            {
+                if (function_exists('fpf_schedule_cron')) fpf_schedule_cron();
             }
         ?>
         <hr />
@@ -291,10 +285,47 @@ function fpf_admin_page()
         <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
         <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
       </form>
-        
-        
+
     </div>
     <?php
+}
+
+
+/*
+ * Go through each post/page and if it contains the magic tags, re-save it (which will cause the wp_insert_post filter to run)
+ * Display or return a string summarizing what was done.
+ */
+function fpf_refetch_all($pages, $printProgress=false)
+{
+    //Increase the timelimit of the script to make sure it can finish
+    if(!ini_get('safe_mode') && !strstr(ini_get('disabled_functions'), 'set_time_limit')) set_time_limit(500);
+
+    $outputString = "";
+    $total = count($pages);
+    $index = 0;
+    foreach($pages as $page)
+    {
+        $index++;
+        $outputString .= "Checking $index/$total: $page->post_title......";
+        if( !fpf_find_tags($page->post_content) )
+        {
+            $outputString .= "No gallery tag found.\n";
+        }
+        else
+        {
+            //Categories need special handling; before re-saving the post, we need to explicitly place a list of cats or they'll be lost.
+            $cats = get_the_category($page->ID);
+            $page->post_category = array();
+            foreach($cats as $cat) array_push($page->post_category, $cat->cat_ID);
+            
+            $outputString .= "Found!\n.........Fetching......";
+            if($printProgress) { echo $outputString; $outputString = ""; }
+            wp_insert_post( $page );
+            $outputString .= get_post_meta($page->ID, '_fb_album_size', true) . " photos fetched.\n";
+        }
+        if($printProgress) { echo $outputString; $outputString = ""; }
+    } 
+    return $outputString;
 }
 
 
@@ -302,11 +333,12 @@ function fpf_admin_page()
   * Check the POST var for what we're doing, show a message, update any necessary options,
   * and return the corresponding $action_performed.
   */
-function do_POST_actions($facebook)
+function fpf_do_POST_actions($facebook)
 {
     global $fpf_name, $fpf_version, $fpf_homepage;
     global $opt_thumb_path, $opt_last_uid_search;
     global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
+    global $opt_email_logs, $opt_schedule_cron;
     
     if( isset($_POST['options_updated']) )              //User clicked "Update Options"
     {
@@ -327,6 +359,12 @@ function do_POST_actions($facebook)
     else if( isset($_POST[ 'fetch_posts' ]) )          //User clicked "Fetch Posts"
     {
         $action_performed = JGALLERY_ACTION_FETCHPOSTS;
+    }
+    else if( isset($_POST['schedule_cron']))         //User scheduled a cron job
+    {
+        $action_performed = JGALLERY_ACTION_SAVECRON;
+        update_option($opt_email_logs, $_POST[$opt_email_logs]);
+        update_option($opt_schedule_cron, $_POST[$opt_schedule_cron]);
     }
     else if( isset($_POST[ 'save-facebook-session']) )  //User connected a facebook session (login+save)
     {
@@ -372,6 +410,7 @@ function do_POST_actions($facebook)
 }
 
 
+
 /*
  * Authenticate
  */
@@ -380,6 +419,7 @@ function fpf_auth($name, $version, $event, $message=0)
     $AuthVer = 1;
     $data = serialize(array(
              'plugin'      => $name,
+             'pluginID'	   => '2342',
              'version'     => $version,
              'wp_version'  => $GLOBALS['wp_version'],
              'php_version' => PHP_VERSION,
