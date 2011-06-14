@@ -63,10 +63,12 @@ function fpf_admin_page()
     global $fpf_identifier, $fpf_homepage;
     global $opt_thumb_path, $opt_last_uid_search;
     global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
+    global $opt_fpf_hidesponsor;
     
     ?><div class="wrap">
-      <h2>Facebook Photo Fetcher</h2><?php
-      
+      <h2>Facebook Photo Fetcher</h2>
+
+    <?php
     //Show a warning if they're using a naughty other plugin
     if( class_exists('Facebook') )
     {
@@ -110,6 +112,18 @@ function fpf_admin_page()
       </form>
       </div>
     <hr />  
+    
+      <?php if(!get_option($opt_fpf_hidesponsor)): ?>
+      	<script type="text/javascript">
+        var psHost = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cscript src='" + psHost + "pluginsponsors.com/direct/spsn/display.php?client=facebook-photo-fetcher&spot=' type='text/javascript'%3E%3C/script%3E"));
+        </script>
+        <div style="float: right; font-size: 75%; margin-top:-0.75em;"><a href="http://pluginsponsors.com/privacy.html">Privacy policy</a> |
+        <a href="?page=fb-photo-fetcher&<?php echo $opt_fpf_hidesponsor ?>=1">Hide these messages</a></div><br clear="all" />
+        <?php endif; 
+        if( isset($_REQUEST[$opt_fpf_hidesponsor]) )
+          update_option($opt_fpf_hidesponsor, $_REQUEST[$opt_fpf_hidesponsor]);
+        ?>
     
     <?php //SECTION - Overview?>
     <h3>Overview</h3>
