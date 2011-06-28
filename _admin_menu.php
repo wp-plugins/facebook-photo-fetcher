@@ -203,7 +203,7 @@ function fpf_admin_page()
                 else                     echo "<b>Available Facebook Albums for ID $search_uid</b><br />";    
                 echo "<small>";
                 if( is_array($albums) )
-                    foreach($albums as $album) echo '['.$fpf_identifier. ' ' . $album['aid'] . '] - <a href="'.$album['link'].'">'. $album['name'] .'</a><br />';
+                    foreach($albums as $album) echo '&lt;!--'.$fpf_identifier. ' ' . $album['aid'] . ' --&gt;&lt;!--/FBGallery--&gt; (<a href="'.$album['link'].'">'. $album['name'] .'</a>)<br />';
                 else
                     echo "None found.<br />";
                 echo "</small><br />";
@@ -213,7 +213,8 @@ function fpf_admin_page()
        ?>
        <form name="listalbums" method="post" action="">
            To get a list of album ID's that you can use to create galleries, enter a Facebook user ID below and click "Search."<br /><br />
-           Your UserID is <b><?php echo $my_uid?></b>. To get a friend's ID, go to their profile and click "View Videos of xx."  The URL will end in <b>?of=1234567</b>; this number is their ID.<br /><br /> 
+           Your UserID is <b><?php echo $my_uid?></b>. To get a friend's ID, go to their profile and click "View Videos of xx."  The URL will end in <b>?of=1234567</b>; this number is their ID.<br /><br />
+           Note that searching only works for personal albums; for groups and pages, see "Customizing" in the plugin documentation <a href="http://www.justin-klein.com/projects/facebook-photo-fetcher">here</a>.<br /><br /> 
            <input type="text" name="<?php echo $opt_last_uid_search?>" value="<?php echo $search_uid?>" size="20"><br /><br />
            <input type="submit" class="button-secondary"  name="Submit" value="Search" />
        </form>
