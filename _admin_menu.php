@@ -113,13 +113,8 @@ function fpf_admin_page()
       </div>
     <hr />  
     
-      <?php if(!get_option($opt_fpf_hidesponsor)): ?>
-      	<script type="text/javascript">
-        var psHost = (("https:" == document.location.protocol) ? "https://" : "http://");
-        document.write(unescape("%3Cscript src='" + psHost + "pluginsponsors.com/direct/spsn/display.php?client=facebook-photo-fetcher&spot=' type='text/javascript'%3E%3C/script%3E"));
-        </script>
-        <div style="float: right; font-size: 75%; margin-top:-0.75em;"><a href="http://pluginsponsors.com/privacy.html">Privacy policy</a> |
-        <a href="?page=fb-photo-fetcher&<?php echo $opt_fpf_hidesponsor ?>=1">Hide these messages</a></div><br clear="all" />
+        <?php if(!get_option($opt_fpf_hidesponsor)): ?>
+	       <!-- Sponsorship message *was* here, until Automattic demanded they be removed from all plugins - see http://gregsplugins.com/lib/2011/11/26/automattic-bullies/ -->
         <?php endif; 
         if( isset($_REQUEST[$opt_fpf_hidesponsor]) )
           update_option($opt_fpf_hidesponsor, $_REQUEST[$opt_fpf_hidesponsor]);
