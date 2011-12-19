@@ -341,7 +341,7 @@ function fpf_attach_thumbnail($post_ID, $thumb)
     
     //Copy the file from FB to the server
     @mkdir($thumb_path);
-    $dstFile = $thumb_path . '/fbthumb_' . $post_ID . '.jpg';
+    $dstFile = trailingslashit($thumb_path) . 'fbthumb_' . $post_ID . '.jpg';
     $res     = copy( $thumb, $dstFile );
     if( !$res )
     {

@@ -3,8 +3,8 @@ Contributors: Justin_K
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L32NVEXQWYN8A
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
-Tested up to: 3.2.1
-Stable tag: 1.2.13
+Tested up to: 3.3
+Stable tag: 1.2.14
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -66,6 +66,10 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+= 1.2.14 (2011-12-19) =
+* Apply trailingslashit() to the thumbnail path to prevent double-slash
+* Update compatibility number 
+
 = 1.2.13 (2011-11-28) =
 * Removed plugin sponsorship messages.  See [Automattic Bullies WordPress Plugin Developers -- Again](http://gregsplugins.com/lib/2011/11/26/automattic-bullies/).
 * Update compatibility number
