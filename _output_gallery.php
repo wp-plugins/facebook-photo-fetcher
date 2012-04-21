@@ -284,7 +284,7 @@ function fpf_fetch_album_content($aid, $params)
         $caption = preg_replace("/\r/", "", $caption);
         $caption_with_br = htmlspecialchars(preg_replace("/\n/", "<br />", $caption));
         $caption_no_br = preg_replace("/\n/", " ", $caption);
-        $link = '<a class="fbPhoto" href="'.$photo['src_big'] . '" title="'.$caption_with_br.' " ><img src="' . $photo['src'] . '" alt="" /></a>';
+        $link = '<a rel="' . $aid . '" class="fbPhoto" href="'.$photo['src_big'] . '" title="'.$caption_with_br.' " ><img src="' . $photo['src'] . '" alt="" /></a>';
         $retVal['content'] .= "<dl class='gallery-item' style=\"width:$itemwidth%\">";
         $retVal['content'] .= "<dt class='gallery-icon'>$link</dt>";
         if(!$params['hideCaps'])
@@ -305,17 +305,19 @@ function fpf_fetch_album_content($aid, $params)
     //Activate the lightbox when the user clicks a photo (only if the Lightbox plugin isn't already there)
     if( !$params['noLB'] && !function_exists('lightbox_2_options_page') )
     {
-        $imagePath = plugins_url(dirname(plugin_basename(__FILE__))) . "/jquery-lightbox/images/";
-        $retVal['content'] .= '<script type="text/javascript">
-            jQuery(document).ready(function(){ jQuery(function(){ 
-                jQuery(".gallery-icon a").lightBox({
-                    imageBlank:"'.$imagePath.'lightbox-blank.gif",
-                    imageBtnClose:"'.$imagePath.'lightbox-btn-close.gif",
-                    imageBtnNext:"'.$imagePath.'lightbox-btn-next.gif",
-                    imageBtnPrev:"'.$imagePath.'lightbox-btn-prev.gif",
-                    imageLoading:"'.$imagePath.'lightbox-ico-loading.gif"
-                }); }); });'.
-             "\n</script>\n";
+        $retVal['content'] .= '<script type="text/javascript">//<!--
+		jQuery(document).ready(function() {
+			jQuery("a[rel='.$aid.']").fancybox({
+				"transitionIn"	: "elastic",
+				"transitionOut"	: "elastic",
+				"titlePosition" : "inside",
+				"titleFormat"	: function(title, currentArray, currentIndex, currentOpts)
+				{
+					return "<span id=\'fancybox-title-over\' style=\'background-image:none; text-align:left;\'>" + (title.length ? title : "") + "</span>";
+				}
+			});
+		});'.
+        "\n//--></script>\n";
     }
     $retVal['content'] .= "<!-- End Album ". $aid ." -->\n";
     return $retVal;

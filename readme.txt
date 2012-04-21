@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 3.3.1
-Stable tag: 1.2.15
+Stable tag: 1.3.0
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -66,6 +66,9 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+= 1.3.0 (2012-04-21) =
+* Apparently, the previous lightbox implementation included with this plugin was not GPL-compatible (leading to its removal from the repository). This update uses a different lightbox that should satisfy WP.org.  NOTE that if you update, you will need to re-fetch all of your albums so that their code will be updated to use new lightbox.  You can do this quickly via the "Re-Fetch All Albums In Pages" and "Re-Fetch All Albums In Posts" admin panel buttons. 
+
 = 1.2.15 (2012-02-05) =
 * Update version compatability number
 * Fix "refresh albums" to work for PRIVATE post/pages (as well as public)
