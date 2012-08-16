@@ -63,7 +63,6 @@ function fpf_admin_page()
         //We're connecting the useraccount to facebook, and the user just did STEP 2
         //We need to use the connection token to create a new session and save it,
         //which we'll use from now on to reconnect as the authenticated user.
-        //See important note at the top of the file for why this works (it's an infinite session)
         $token = $_POST[ 'save-facebook-session' ];
         try
         {
@@ -76,7 +75,7 @@ function fpf_admin_page()
         $errorMsg = 0;
         if( !$new_session )             $errorMsg = "Failed to get an authenticated session.";
         if( !$new_session['secret'])    $errorMsg = "Failed to get a session secret.  See <a href=\"".$fpf_homepage."#faq3\">FAQ3</a>.";
-        if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session.";
+        //if( $new_session['expires'] > 0)$errorMsg = "Failed to generate an infinite session."; NOTE: FACEBOOK DEPRECATES OFFLINE_ACCESS in October 2012, so I can no longer do this!
         
         //Success!  Save the key, secret, userID, and username
         if( !$errorMsg )
@@ -165,18 +164,13 @@ function fpf_admin_page()
         <input type="hidden" name="auth_token" value="<?php echo $token ?>" />
         <input type="hidden" name="popup" value="1" />      <?php //Style the window as a popup?>
         <input type="hidden" name="skipcookie" value="1" /> <?php //User must enter login info even if already logged in?>
-        <input type="hidden" name="req_perms" value="offline_access" /> <?php  //Require an infinite session?>
+        <input type="hidden" name="req_perms" value="offline_access,user_photos,friends_photos" /> <?php  //Require an infinite session?>
         <input type="hidden" name="v" value="1.0" />
         <input type="submit" class="button-secondary" id="step1Btn" value="<?php echo $my_uid?"Change Facebook Account":"Login to Facebook"; ?>" />
       </form>
       </div>
       
-      <!-- NEW STEP!  Added when FB changed their policies in June, 2010... -->
-      <div id="step2wrap" style="display:none">
-          <a id="step2link" style="font-weight:bold;background:#00FF00;border:1px solid grey;padding:2px;width:auto;" target="newperms" href="http://www.facebook.com/connect/prompt_permission.php?api_key=<?php echo $appapikey?>&next=http://www.facebook.com/connect/login_success.html&cancel=http://www.facebook.com/connect/login_failure.html&display=wap&ext_perm=user_photos,friends_photos">Grant Photo Permissions</a>
-      </div>
-            
-      <div id="step3wrap" style="display:none;">
+      <div id="step2wrap" style="display:none;">
       <form method="post" action="">
         <input type="hidden" name="save-facebook-session" value="<?php echo $token ?>" />
         <input type="submit" class="button-secondary" style="font-weight:bold;background:#00FF00;" value="Save Facebook Session" />
@@ -188,11 +182,6 @@ function fpf_admin_page()
     	  jQuery('#step1Frm').submit(function() {
         	  jQuery('#step1wrap').toggle();
         	  jQuery('#step2wrap').toggle();
-        	});
-
-    	  jQuery('#step2link').click(function() {
-        	  jQuery('#step2wrap').toggle();
-        	  jQuery('#step3wrap').toggle();
         	});
     	});
       </script>
@@ -402,6 +391,10 @@ to have to keep logging in all the time, we need to get an infinite session, whi
 2) Make sure to set the $facebook->api_client->secret = $appsecret; (aka set the API_CLIENT's secret
    to the APPLICATION's secret) before calling auth_createToken().  If you do that, the session
    returned by auth_getSession() will not expire.
+ ***NOTE*** THIS IS NO LONGER TRUE; in Oct2012, Facebook deprecated the concept of the "infinite session!" See
+ * https://developers.facebook.com/roadmap/offline-access-removal.
+ * I fixed it so the app will still work, but I may have to do something like i.e. schedule a cronjob to
+ * periodically query Facebook to renew the session...
 */
 
 ?>

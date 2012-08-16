@@ -3,8 +3,8 @@ Contributors: Justin_K
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L32NVEXQWYN8A
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
-Tested up to: 3.3.1
-Stable tag: 1.3.1
+Tested up to: 3.4.1
+Stable tag: 1.3.2
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -42,7 +42,7 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 3. Head over to Settings -> FB Photo Fetcher.
 
-4. Click the "Login to Facebook" button to popup a Facebook login page.  Enter your information, click "Login", then close the popup.  Next, click "Grant Photo Permissions."  Accept the permissions in the popup and when it says "Success," close it.  Finally, click "Save Facebook Session."  It should now say "This plugin is successfully connected with xxxxxxx's Facebook account."
+4. Click the "Login to Facebook" button to popup a Facebook login page.  Follow the prompts, accepting the required permissions until you reach a page that says "You may now close this window and return to the application." Close the window and click "Save Facebook Session."  It should now say "This plugin is successfully connected with xxxxxxx's Facebook account."
 
 5. Now we need to get the ID of an album you'd like to import. Click the "Search for Albums" button; It will automatically connect to Facebook and produce a list of all the albums you can access, each with an associated ID number. Let's use the example 1234567890123456789.
 
@@ -66,6 +66,12 @@ Note: The above instructions only include the most basic setup; this plugin prov
 
 
 == Changelog ==
+= 1.3.2 (2012-08-16) =
+* Facebook changed their API and broke things yet again (removal of prompt_permission.php endpoint). This update should work around it and get things running as they were previously.
+* Facebook has announced that they'll break offline_access on Oct 3, 2012.  This update should keep the plugin running after that update as well. 
+* Update setup instructions
+* Update Wordpress compatibility number. 
+
 = 1.3.1 (2012-06-05) =
 * Update the instructions for getting userIDs in the admin panel (Facebook changed their URL scheme again).
 
