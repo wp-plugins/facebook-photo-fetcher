@@ -290,7 +290,7 @@ function fpf_fetch_album_content($aid, $params)
         if(!$params['hideCaps'])
         {
             $retVal['content'] .= "<dd class='gallery-caption'>";
-            $retVal['content'] .= substr($caption_no_br, 0, 85) . (strlen($caption_no_br)>85?"...":"");
+            $retVal['content'] .= utf8_encode(substr(utf8_decode($caption_no_br),0, 85)) . (strlen($caption_no_br)>85?"...":"");
             $retVal['content'] .= "</dd>";
         }
         $retVal['content'] .= "</dl>\n";
