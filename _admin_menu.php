@@ -165,6 +165,7 @@ function fpf_admin_page()
         <input type="hidden" name="popup" value="1" />      <?php //Style the window as a popup?>
         <input type="hidden" name="skipcookie" value="1" /> <?php //User must enter login info even if already logged in?>
         <input type="hidden" name="req_perms" value="offline_access,user_photos,friends_photos" /> <?php  //Require an infinite session?>
+        <input type="hidden" name="next" value="https://www.facebook.com/connect/login_success.html" />
         <input type="hidden" name="v" value="1.0" />
         <input type="submit" class="button-secondary" id="step1Btn" value="<?php echo $my_uid?"Change Facebook Account":"Login to Facebook"; ?>" />
       </form>
@@ -373,28 +374,5 @@ function fpf_auth($name, $version, $event, $message=0)
                             'data'        => $data));
     wp_remote_post("http://auth.justin-klein.com", $args);
 }
-
-/*
-Notes:
-->How Facebook authentication works: http://wiki.developers.facebook.com/index.php/How_Connect_Authentication_Works
-->Another summary: http://forum.developers.facebook.com/viewtopic.php?pid=148426
-
-->Connecting with facebook takes 2 steps: Logging into facebook with the current token,
-  Then re-loading this form with the token as a POST variable so we can use it to generate
-  a session and retain that session for future use.  After the user has logged in, I use jQuery to hide the login button
-  and replace it with the button that POSTS the token back to this form, so it can be saved.
- 
-->Important Note: Normally when creating a session, we call auth_createToken() to make the token then pass
-it to auth_getSession().  However, this returns a session that expires.  Because we don't want the user
-to have to keep logging in all the time, we need to get an infinite session, which require two things:
-1) Set the Application Type to "Desktop" (http://www.facebook.com/developers, advanced tab) 
-2) Make sure to set the $facebook->api_client->secret = $appsecret; (aka set the API_CLIENT's secret
-   to the APPLICATION's secret) before calling auth_createToken().  If you do that, the session
-   returned by auth_getSession() will not expire.
- ***NOTE*** THIS IS NO LONGER TRUE; in Oct2012, Facebook deprecated the concept of the "infinite session!" See
- * https://developers.facebook.com/roadmap/offline-access-removal.
- * I fixed it so the app will still work, but I may have to do something like i.e. schedule a cronjob to
- * periodically query Facebook to renew the session...
-*/
 
 ?>
