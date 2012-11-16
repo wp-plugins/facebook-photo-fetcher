@@ -3,13 +3,13 @@
  * Plugin Name: Facebook Photo Fetcher
  * Description: Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.  
  * Author: Justin Klein
- * Version: 1.3.5
+ * Version: 2.0.0
  * Author URI: http://www.justin-klein.com/
  * Plugin URI: http://www.justin-klein.com/projects/facebook-photo-fetcher
  */
 
 /*
- * Copyright 2010 Justin Klein (email: justin@justin-klein.com)
+ * Copyright 2010-2012 Justin Klein
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -26,29 +26,18 @@
  * Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-//The "magic tag" identifier
+//Non-database vars
 global $fpf_name, $fpf_version, $fpf_identifier, $fpf_homepage;
 $fpf_name       = "Facebook Photo Fetcher";
-$fpf_version    = "1.3.4";
-$fpf_identifier = "FBGallery";
+$fpf_version    = "2.0.0";
+$fpf_identifier = "FBGallery2";
 $fpf_homepage   = "http://www.justin-klein.com/projects/facebook-photo-fetcher";
 
-//The Facebook application API key
-global $appapikey, $appsecret;
-$appapikey     = 'bda1991054a9cfd3db9858164a97724e';
-$appsecret     = '0cdcfe433f0a4e537264a8822c5b7682';
-
-//Wordpress Database Options (get_option())
-global $opt_fb_sess_key, $opt_fb_sess_sec, $opt_fb_sess_uid, $opt_fb_sess_uname;
-global $opt_thumb_path, $opt_last_uid_search;
-global $opt_fpf_hidesponsor;
-$opt_fb_sess_key     = 'fb-session-key';    //The user's session key
-$opt_fb_sess_sec     = 'fb-session-secret'; //The user's session secret
-$opt_fb_sess_uid     = 'fb-session-uid';    //The user's UID
-$opt_fb_sess_uname   = 'fb-session-uname';  //The user's username
-$opt_thumb_path      = 'thumb_path';        //The path to save album thumbnails
-$opt_last_uid_search = 'last_uid-search';   //The last userID whose albums we searched for
-$opt_fpf_hidesponsor = 'fpf-hidesponsor';
+//Vars stored in the database
+global $fpf_opt_access_token, $fpf_opt_token_expiration, $fpf_opt_last_uid_search;
+$fpf_opt_access_token    = 'fpf-graph-token';        //The new Graph-style access_token
+$fpf_opt_token_expiration= 'fpf-token-expiration';   //The expiration timestamp of the token
+$fpf_opt_last_uid_search = 'fpf-last-search-uid';    //The last userID whose albums we searched for
 
 //Include an addon file, if present
 @include_once(realpath(dirname(__FILE__))."/../Facebook-Photo-Fetcher-Addon.php");
@@ -73,6 +62,26 @@ function add_lightbox()
 
 //Add a default stylesheet
 wp_enqueue_style('fpf', plugins_url(dirname(plugin_basename(__FILE__))).'/style.css', array(), $fpf_version );
+
+
+//A wrapper function I use to pull data from the Facebook Graph API
+function fpf_get($url)
+{
+    //Try to access the URL
+    $result = wp_remote_get($url);
+    
+    //In some rare situations, Wordpress may unexpectedly return WP_Error.  If so, I'll create a Facebook-style error object
+    //so my Facebook-style error handling will pick it up without special cases everywhere.
+    if(is_wp_error($result))
+    {
+        $result->error->message = "wp_remote_get() failed!";
+        if( method_exists($result, 'get_error_message')) $result->error->message .= "Message: " . $result->get_error_message();
+        return $result;
+    }
+    
+    //Otherwise, we're OK - decode the JSON text provided by Facebook into a PHP object.
+    return json_decode($result['body']);
+}
 
 
 //Activate
