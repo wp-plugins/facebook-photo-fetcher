@@ -54,7 +54,7 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 * The ID numbering scheme has been changed
 * The admin panel revalidates your access token whenever it's loaded, to make sure it hasn't expired
 * Added a button to remove an existing token from the database (aka deauthorize)
-* Renamed the 'item count' postmeta from _fb_album_count to _fpf_album_count
+* Renamed the 'item count' postmeta from _fb_album_size to _fpf_album_size
 * Added new postmeta _fpf_album_cover with the Facebook URL of the cover photo
 * Removed the Add-From-Server feature (it wasn't working properly; may re-add it at some point in the future...)
 * Name and uid are no longer stored in the db, as they're only used by the admin panel (and can be fetched as part of the revalidation test)
