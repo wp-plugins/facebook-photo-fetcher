@@ -23,11 +23,11 @@ Features:
 * Galleries are fully customizable: you can import complete albums, select excerpts, random excerpts, album descriptions, photo captions, and more.
 * Galleries can be organized however you like: in any post or page, alone or alongside your other content.
 * Simple PHP template function allows programmers to manually embed albums in any template or widget.
-* Built-in support for LightBox: Photos appear in attractive pop-up overlays without the need for any other plugins.
+* Built-in LightBox: Photos appear in attractive pop-up overlays without the need for any other plugins.
 * Admin panel handles all the setup for you: Just login and you're ready to start making albums.
 * Admin panel includes a utility to search for albums you can access (and use to create galleries).
 * Admin panel includes a utility to auto-traverse all your posts and pages, updating albums that may've changed on Facebook.
-* No custom database modifications are performed: all it does is automate the creation of post/page content for you.
+* No custom database tables required; galleries live in regular post content.
 
 For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/projects/facebook-photo-fetcher).
 
@@ -53,7 +53,6 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 * The Magic Tag identifier has been changed to "FBGallery2"
 * The ID numbering scheme has been changed
 * The admin panel revalidates your access token whenever it's loaded, to make sure it hasn't expired
-* Added a button to renew access tokens (Facebook no longer allows 'infinite' tokens; 60 days is the max)
 * Added a button to remove an existing token from the database (aka deauthorize)
 * Renamed the 'item count' postmeta from _fb_album_count to _fpf_album_count
 * Added new postmeta _fpf_album_cover with the Facebook URL of the cover photo
