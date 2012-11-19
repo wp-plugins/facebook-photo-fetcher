@@ -21,3 +21,8 @@
     font-size:80%;
     color: #BBBBBB;
 }
+
+#branding{
+    /*Fix for the Twenty Eleven theme*/
+    z-index:999;
+}

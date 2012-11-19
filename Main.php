@@ -3,7 +3,7 @@
  * Plugin Name: Facebook Photo Fetcher
  * Description: Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.  
  * Author: Justin Klein
- * Version: 2.0.0
+ * Version: 2.1.0
  * Author URI: http://www.justin-klein.com/
  * Plugin URI: http://www.justin-klein.com/projects/facebook-photo-fetcher
  */
@@ -29,7 +29,7 @@
 //Non-database vars
 global $fpf_name, $fpf_version, $fpf_identifier, $fpf_homepage;
 $fpf_name       = "Facebook Photo Fetcher";
-$fpf_version    = "2.0.0";
+$fpf_version    = "2.1.0";
 $fpf_identifier = "FBGallery2";
 $fpf_homepage   = "http://www.justin-klein.com/projects/facebook-photo-fetcher";
 
@@ -49,19 +49,18 @@ require_once('_admin_menu.php');
 //Script for creating galleries
 require_once('_output_gallery.php');
 
-//If there's no Lightbox plugin, include our own lightbox code
-add_action('plugins_loaded', 'add_lightbox');
-function add_lightbox()
+//Enqueue stylesheets and lightbox
+add_action('wp_enqueue_scripts', 'fpf_enqueue_headerstuff');
+function fpf_enqueue_headerstuff()
 {
+    global $fpf_version;
+    wp_enqueue_style('fpf', plugins_url(dirname(plugin_basename(__FILE__))).'/style.css', array(), $fpf_version );
     if(!function_exists('lightbox_2_options_page'))
     {
         wp_enqueue_script('fancybox', plugins_url(dirname(plugin_basename(__FILE__))).'/fancybox/jquery.fancybox-1.3.4.pack.js', array('jquery'), "1.3.4");
         wp_enqueue_style('fancybox', plugins_url(dirname(plugin_basename(__FILE__))).'/fancybox/jquery.fancybox-1.3.4.css', array(), "1.3.4" );
     }  
 }
-
-//Add a default stylesheet
-wp_enqueue_style('fpf', plugins_url(dirname(plugin_basename(__FILE__))).'/style.css', array(), $fpf_version );
 
 
 //A wrapper function I use to pull data from the Facebook Graph API

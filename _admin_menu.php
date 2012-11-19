@@ -66,7 +66,7 @@ function fpf_admin_page()
         {
             update_option( $fpf_opt_access_token, 0 );
             update_option( $fpf_opt_token_expiration, 0 );
-            ?><div class="updated"><p><strong><?php echo 'Error: Failed to get a valid access token from Facebook.'?></strong></p></div><?php
+            ?><div class="updated"><p><strong><?php echo 'Error: Failed to get a valid access token from Facebook.  Response: ' . (isset($user->error->message)?$user->error->message:"Unknown");?></strong></p></div><?php
         }    
     }
     else if( isset($_POST['delete_token']) ) //User wants to remove the current access token.
@@ -112,7 +112,8 @@ function fpf_admin_page()
     $allTabBtnsClass = "fpf_admin_tab_btn";
     $tab1Id = "fpf_admin_fbsetup";
     $tab2Id = "fpf_admin_utils";
-    $tab3Id = "fpf_admin_donate";
+    $tab3Id = "fpf_admin_supportinfo";
+    $tab4Id = "fpf_admin_donate";
     $shownTab = $access_token?2:1;
     ?>
     
@@ -133,7 +134,8 @@ function fpf_admin_page()
         <ul class="fpf-admin_tabs">
            <li id="<?php echo $tab1Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==1?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab1Id?>');">Facebook Setup</a></li>
            <li id="<?php echo $tab2Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==2?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab2Id?>')";>Utilities</a></li>
-           <li id="<?php echo $tab3Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==3?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab3Id?>')";>Donate</a></li>
+           <li id="<?php echo $tab3Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==3?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab3Id?>')";>Support Info</a></li>
+           <li id="<?php echo $tab4Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==4?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab4Id?>')";>Donate</a></li>
         </ul>
     </div>
     
@@ -152,7 +154,7 @@ function fpf_admin_page()
             
             <?php //SECTION - Facebook Authorization. See notes at the bottom of this file. ?>
             <h3>Facebook Authorization</h3>
-            <?php if( $access_token ): ?> <i>This plugin is successfully connected with <b><?php echo $user->name; ?></b>'s Facebook account and is ready to create galleries.</i>If you'd like to remove the connection and authorize a different user, click the button below:<br /><br /> 
+            <?php if( $access_token ): ?> <i>This plugin is successfully connected with <b><?php echo $user->name; ?></b>'s Facebook account and is ready to create galleries.</i>  If you'd like to remove the connection and authorize a different user, click the button below:<br /><br /> 
             <?php else:                ?> Before this plugin can be used, you must connect it to your Facebook account.  Please click the following button to login.<br /><br />
             <?php endif; ?>
             
@@ -169,45 +171,48 @@ function fpf_admin_page()
         	<!--on my auth server, shown here in an iFrame. Once the user authorizes, easyXDM will communicate the token back to this-->
         	<!--admin panel where it can be saved. EasyXDM creates the iFrame for us, sends a message to tell it what to name the button,-->
         	<!--then waits for the login token.  The iFrame lives in the "authorizeFrame" container.-->
-            <?php if(!$access_token): ?>  <!--TEMP!! REMOVE THIS ONCE I CONFIRM THAT RENEWAL WORKS-->
-        	<div id="graph_step1" style="width:150px;height:23px;float:left;">
-        		<div id="authorizeFrame" style="height:30px;overflow:hidden;"></div>
-        		<script type="text/javascript" src="<?php echo plugins_url(dirname(plugin_basename(__FILE__)))?>/easyXDM/easyXDM.min.js"></script>
-        		<script>
-        			var socket = new easyXDM.Socket(
-        			{
-        			    //EasyXDM will setup the iFrame here
-        				container: "authorizeFrame",
-        	    		remote: "http://auth.justin-klein.com/FPF-Auth",
-        	    		
-                        //Once it's ready, send a message to tell it what to name the login button & which plugin version we're using
-                        onReady: function()
-                        {
-                            var message = {btnName:'<?php echo ($access_token?"Renew":"Login with Facebook")?>',
-                                           pluginVersion:'<?php echo $fpf_version;?>'};
-                            socket.postMessage(JSON.stringify(message));
-                        },
-        
-                        //And wait for a response - which will come once the user has logged in with Facebook.
-                        //When the response comes, auto-submit the invisible form below to save the token.
-        	    		onMessage: function(message, origin)
-        	    		{
-        	    		    var response = JSON.parse(message);
-        	        		jQuery('#<?php echo $fpf_opt_access_token?>').val(response.accessToken);
-        	        		jQuery('#<?php echo $fpf_opt_token_expiration?>').val(response.expiresIn);
-        	        		jQuery('#graph_token_submit').submit();
-        	    		}
-        			});
-        		</script>
-        	</div>			
-        	<form method="post" id="graph_token_submit" action="">
-                <input type="hidden" id="<?php echo $fpf_opt_access_token?>" name="<?php echo $fpf_opt_access_token?>" value="0" />
-                <input type="hidden" id="<?php echo $fpf_opt_token_expiration?>" name="<?php echo $fpf_opt_token_expiration?>" value="0" />
-            </form>
+        	<!--The iFrame may be named "Login with Facebook" or "Renew," based on if there's already a token in the database.  A "renew" button-->
+        	<!--will only be shown if there's 59 days or less until expiration (since FB doesn't allow you to renew in the first day).-->
+        	<?php if(!$access_token || ($access_token && (get_option($fpf_opt_token_expiration) - time())/60/60/24 < 59.0)): ?>
+            	<div id="graph_step1" style="width:150px;height:23px;float:left;">
+            		<div id="authorizeFrame" style="height:30px;overflow:hidden;"></div>
+            		<script type="text/javascript" src="<?php echo plugins_url(dirname(plugin_basename(__FILE__)))?>/easyXDM/easyXDM.min.js"></script>
+            		<script>
+            			var socket = new easyXDM.Socket(
+            			{
+            			    //EasyXDM will setup the iFrame here
+            				container: "authorizeFrame",
+            	    		remote: "http://auth.justin-klein.com/FPF-Auth",
+            	    		
+                            //Once it's ready, send a message to tell it what to name the login button & which plugin version we're using
+                            onReady: function()
+                            {
+                                var message = {btnName:'<?php echo ($access_token?"Renew":"Login with Facebook")?>',
+                                               pluginVersion:'<?php echo $fpf_version;?>'};
+                                socket.postMessage(JSON.stringify(message));
+                            },
             
-            <?php if($access_token): ?><span style="float:left;"><small>(Expires in <?php echo human_time_diff(get_option($fpf_opt_token_expiration))?>)</small></span><?php endif; ?>
-            <br clear="all" />
-            <?php endif; ?> <!--TEMP!! REMOVE THIS ONCE I CONFIRM THAT RENEWAL WORKS-->
+                            //And wait for a response - which will come once the user has logged in with Facebook.
+                            //When the response comes, auto-submit the invisible form below to save the token.
+            	    		onMessage: function(message, origin)
+            	    		{
+            	    		    var response = JSON.parse(message);
+            	        		jQuery('#<?php echo $fpf_opt_access_token?>').val(response.accessToken);
+            	        		jQuery('#<?php echo $fpf_opt_token_expiration?>').val(response.expiresIn);
+            	        		jQuery('#graph_token_submit').submit();
+            	    		}
+            			});
+            		</script>
+            	</div>			
+            	<form method="post" id="graph_token_submit" action="">
+                    <input type="hidden" id="<?php echo $fpf_opt_access_token?>" name="<?php echo $fpf_opt_access_token?>" value="0" />
+                    <input type="hidden" id="<?php echo $fpf_opt_token_expiration?>" name="<?php echo $fpf_opt_token_expiration?>" value="0" />
+                </form>
+                
+                <?php if($access_token): ?><span style="float:left;"><small>(Expires in <?php echo human_time_diff(get_option($fpf_opt_token_expiration))?>)</small></span><?php endif; ?>
+                <br clear="all" />
+            <?php endif; ?>
+            
             <hr />
             <?php
             //Output the token expiration, for testing.
@@ -320,8 +325,30 @@ function fpf_admin_page()
         </div><!--end tab-->
         
         <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab3Id?>" style="display:<?php echo ($shownTab==3?"block":"none")?>">
+            <h3>Support Information</h3>
+            <div style="width:600px;">
+            Before submitting a support request, please make sure to carefully read all the documentation and FAQs on the <a href="<?php echo $fpf_homepage; ?>" target="_support">plugin homepage</a>.  Every problem that's ever been reported has a solution posted there.<br /><br />            
+            If you do choose to submit a request, please do so on the <a href="<?php echo $fpf_homepage; ?>" target="_support">plugin homepage</a>, <b><i><u>not</u></i></b> on Wordpress.org (which I rarely check).  Also, be sure to include the following information about your Wordpress hosting environment:<br /><br />
+            </div>
+            <div style="width:600px; padding:5px; margin:2px 0; background-color:#EEEDDA; border:1px solid #CCC;">
+                <b>Wordpress Version:</b> <?php echo $GLOBALS['wp_version']; ?><br />
+                <b>Plugin Version:</b> <?php echo $fpf_version ?><br />
+                <b>Browser:</b> <?php echo $_SERVER['HTTP_USER_AGENT'] ?><br /> 
+                <b>Theme:</b> <?php echo get_current_theme(); ?><br />
+                <b>Server:</b> <?php echo substr($_SERVER['SERVER_SOFTWARE'], 0, 45) . (strlen($_SERVER['SERVER_SOFTWARE'])>45?"...":""); ?><br />
+                <b>Active Plugins:</b> 
+                <?php $active_plugins = get_option('active_plugins');
+                      $plug_info=get_plugins();
+                      echo "<b>" . count($active_plugins) . "</b><small> (";
+                      foreach($active_plugins as $name) echo $plug_info[$name]['Title']. " " . $plug_info[$name]['Version']."; ";
+                      echo "</small>)<br />"
+                ?>
+            </div>
+        </div><!--end tab-->
+        
+        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab4Id?>" style="display:<?php echo ($shownTab==4?"block":"none")?>">
           <h4>Development</h4>
-          Many hours have gone into making this plugin as versatile and easy to use as possible, far beyond my own personal needs. Although I offer it to you freely, please keep in mind that each hour spent extending and supporting it was an hour that could've also gone towards income-generating work. If you find it useful, a small donation would be greatly appreciated :)
+          Many hours have gone into making this plugin as versatile and easy to use as possible, far beyond my own personal needs. Although I offer it to you freely, please keep in mind that each hour spent extending and supporting it was an hour that could've also gone towards income-generating work. If you find it useful, a small donation would be greatly appreciated.
           <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
             <input type="hidden" name="cmd" value="_s-xclick" />
             <input type="hidden" name="hosted_button_id" value="L32NVEXQWYN8A" />

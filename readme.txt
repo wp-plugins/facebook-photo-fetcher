@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 3.4.1
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -47,6 +47,16 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 
 == Changelog ==
+= 2.1.0 (2012-11-19) =
+* Add a button to the admin panel to renew Facebook access tokens; it's available from 1 day after the token is created (since FB only allows you to renew once per day)
+* Add a more descriptive error message upon failure to get an access token
+* Add a "Support Info" tab to the admin panel
+* Fix for galleries in custom post types
+* Fix a debug notice about wp_enqueue_style/wp_enqueue_script
+* Fix z-indices in Twenty Eleven (so the lightbox doesn't come up beneath the header)
+* Get rid of the isGroup and isPage warnings (not necessary since I changed the magic tag identifier)
+* Rephrase the 'count mismatch' error message
+
 = 2.0.0 (2012-11-16) =
 * Complete rewrite of all Facebook authentication/interaction code; the plugin now uses the new Graph API.  Existing users of v1.x will need to re-authorize in the admin panel, and potentially update existing album tags (but only if you plan to re-fetch those albums).  Please visit the plugin documentation page for more information on upgrading.
 * New tabbed admin panel
