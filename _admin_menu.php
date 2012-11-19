@@ -331,6 +331,9 @@ function fpf_admin_page()
             If you do choose to submit a request, please do so on the <a href="<?php echo $fpf_homepage; ?>" target="_support">plugin homepage</a>, <b><i><u>not</u></i></b> on Wordpress.org (which I rarely check).  Also, be sure to include the following information about your Wordpress hosting environment:<br /><br />
             </div>
             <div style="width:600px; padding:5px; margin:2px 0; background-color:#EEEDDA; border:1px solid #CCC;">
+                <b>Host URL: </b> <?php echo $_SERVER["HTTP_HOST"] ?><br />
+                <b>Site URL: </b> <?php echo get_bloginfo('url') ?><br />
+                <b>Wordpress URL: </b> <?php echo get_bloginfo('wpurl') ?><br />
                 <b>Wordpress Version:</b> <?php echo $GLOBALS['wp_version']; ?><br />
                 <b>Plugin Version:</b> <?php echo $fpf_version ?><br />
                 <b>Browser:</b> <?php echo $_SERVER['HTTP_USER_AGENT'] ?><br /> 
