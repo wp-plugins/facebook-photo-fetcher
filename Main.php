@@ -3,7 +3,7 @@
  * Plugin Name: Facebook Photo Fetcher
  * Description: Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.  
  * Author: Justin Klein
- * Version: 2.1.1
+ * Version: 2.1.2
  * Author URI: http://www.justin-klein.com/
  * Plugin URI: http://www.justin-klein.com/projects/facebook-photo-fetcher
  */
@@ -29,7 +29,7 @@
 //Non-database vars
 global $fpf_name, $fpf_version, $fpf_identifier, $fpf_homepage;
 $fpf_name       = "Facebook Photo Fetcher";
-$fpf_version    = "2.1.1";
+$fpf_version    = "2.1.2";
 $fpf_identifier = "FBGallery2";
 $fpf_homepage   = "http://www.justin-klein.com/projects/facebook-photo-fetcher";
 
@@ -67,14 +67,14 @@ function fpf_enqueue_headerstuff()
 function fpf_get($url)
 {
     //Try to access the URL
-    $result = wp_remote_get($url);
+    $result = wp_remote_get($url, array( 'sslverify' => false ));
     
     //In some rare situations, Wordpress may unexpectedly return WP_Error.  If so, I'll create a Facebook-style error object
     //so my Facebook-style error handling will pick it up without special cases everywhere.
     if(is_wp_error($result))
     {
         $result->error->message = "wp_remote_get() failed!";
-        if( method_exists($result, 'get_error_message')) $result->error->message .= "Message: " . $result->get_error_message();
+        if( method_exists($result, 'get_error_message')) $result->error->message .= " Message: " . $result->get_error_message();
         return $result;
     }
     
