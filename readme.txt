@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 3.4.1
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -47,6 +47,14 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 
 == Changelog ==
+= 2.1.3 (2012-11-29) =
+* Add filter "fpf_parse_params" to allow developers to supplement the included magic tag params with their own.
+* Add filter "fpf_album_data" to modify the album metadata (i.e. author, date, covor photo, etc).
+* Add filter "fpf_photos_presort" to modify the photo objects received from Facebook.  Applied before trimming/sorting.
+* Add filter "fpf_photos_postsort" to modify the photo objects received from Facebook.  Applied after trimming/sorting.
+* Show "FB Photo Fetcher+" in the admin menu if a 3rd party addon is present, and add support for an "Addon" tab.
+* Move the "donate" link to the bottom of the Support Info tab (rather than a tab of its own).
+
 = 2.1.2 (2012-11-20) =
 * Don't verify the ssl certificate when contacting Facebook (to fix SSL3_GET_SERVER_CERTIFICATE on servers with improper cURL configurations)
 

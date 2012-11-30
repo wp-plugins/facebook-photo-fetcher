@@ -7,7 +7,7 @@ add_action('admin_menu', 'fpf_add_admin_page', 99);
 function fpf_add_admin_page()
 {
 	global $fpf_name; 
-    add_options_page("$fpf_name Options", 'FB Photo Fetcher', 'administrator', "fb-photo-fetcher", 'fpf_admin_page');
+    add_options_page("$fpf_name Options", 'FB Photo Fetcher' . (defined('FPF_ADDON')?"+":""), 'administrator', "fb-photo-fetcher", 'fpf_admin_page');
 }
 
 
@@ -43,6 +43,14 @@ function fpf_admin_page()
 {
 	global $fpf_name, $fpf_version, $fpf_identifier, $fpf_homepage;
     global $fpf_opt_access_token, $fpf_opt_token_expiration, $fpf_opt_last_uid_search;
+    global $fpf_shown_tab;
+    $fpf_shown_tab   = 2;
+    $allTabsClass    = "fpf_admin_tab";
+    $allTabBtnsClass = "fpf_admin_tab_btn";
+    $tab1Id          = "fpf_admin_fbsetup";
+    $tab2Id          = "fpf_admin_utils";
+    $tab3Id          = "fpf_admin_addon";
+    $tab4Id          = "fpf_admin_supportinfo";
     
     ?><div class="wrap">
       <h2><?php echo $fpf_name ?></h2>
@@ -104,19 +112,10 @@ function fpf_admin_page()
     
     //Re-get the access_token, in case it was cleared by an error above)
     $access_token = get_option($fpf_opt_access_token);
+    if(!$access_token) $fpf_shown_tab = 1;
     ?>
 
     <!-- Tab Navigation -->
-    <?php 
-    $allTabsClass = "fpf_admin_tab";
-    $allTabBtnsClass = "fpf_admin_tab_btn";
-    $tab1Id = "fpf_admin_fbsetup";
-    $tab2Id = "fpf_admin_utils";
-    $tab3Id = "fpf_admin_supportinfo";
-    $tab4Id = "fpf_admin_donate";
-    $shownTab = $access_token?2:1;
-    ?>
-    
     <script type="text/javascript">
         function fpf_swap_tabs(show_tab_id) 
         {
@@ -132,16 +131,18 @@ function fpf_admin_page()
     
     <div>     
         <ul class="fpf-admin_tabs">
-           <li id="<?php echo $tab1Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==1?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab1Id?>');">Facebook Setup</a></li>
-           <li id="<?php echo $tab2Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==2?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab2Id?>')";>Utilities</a></li>
-           <li id="<?php echo $tab3Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==3?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab3Id?>')";>Support Info</a></li>
-           <li id="<?php echo $tab4Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($shownTab==4?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab4Id?>')";>Donate</a></li>
+           <li id="<?php echo $tab1Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($fpf_shown_tab==1?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab1Id?>');">Facebook Setup</a></li>
+           <li id="<?php echo $tab2Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($fpf_shown_tab==2?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab2Id?>')";>Utilities</a></li>
+           <?php if (defined('FPF_ADDON')): ?>
+                <li id="<?php echo $tab3Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($fpf_shown_tab==3?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab3Id?>')";>Addon</a></li>
+           <?php endif; ?>
+           <li id="<?php echo $tab4Id?>_btn" class="<?php echo $allTabBtnsClass?> <?php echo ($fpf_shown_tab==4?"fpf-admin_tab_selected":"")?>"><a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab4Id?>')";>Support Info</a></li>
         </ul>
     </div>
     
     <!--Start Main panel content-->
     <div class="fpf-admin_wrapper">
-        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab1Id?>" style="display:<?php echo ($shownTab==1?"block":"none")?>">
+        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab1Id?>" style="display:<?php echo ($fpf_shown_tab==1?"block":"none")?>">
             <h3>Overview</h3>
             This plugin allows you to create Wordpress photo galleries from any Facebook album you can access.<br /><br />
             To get started, you must first connect with your Facebook account using the button below.  Once connected, you can create a gallery by making a new Wordpress post or page and pasting in one line of special HTML, like this:<br /><br />
@@ -149,7 +150,7 @@ function fpf_admin_page()
             Whenever you save a post or page containing these tags, this plugin will automatically download the album information and insert its contents between them.  You are free to include any normal content you like before or after, as usual.<br /><br />
             The example number above (1234567890123456789) is an ID that tells the plugin which Facebook album you'd like to import.  To find a list of available albums, you can use the "Search for Albums" feature under the "Utilities" tab.<br /><br />    
             That's all there is to it!  For more information on how to customize your albums, help, and a demo, please see the full documentation on the <a href="<?php echo $fpf_homepage?>"><b>plugin homepage</b></a>.<br /><br />    
-            And if you like this plugin, please don't forget to donate a few bucks to buy me a beer (or a pitcher).  I promise to enjoy every ounce of it :)<br /><br />
+            And if you like this plugin, please don't forget to <a href="javascript:void(0);" onclick="fpf_swap_tabs('<?php echo $tab4Id?>');jQuery('html, body').animate({ scrollTop: jQuery(document).height() }, 'slow');"><b>donate</b></a> a few bucks to buy me a beer (or a pitcher).  I promise to enjoy every ounce of it :)<br /><br />
             <hr />
             
             <?php //SECTION - Facebook Authorization. See notes at the bottom of this file. ?>
@@ -240,7 +241,7 @@ function fpf_admin_page()
             ?>
         </div><!--end tab-->
 
-        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab2Id?>" style="display:<?php echo ($shownTab==2?"block":"none")?>">    
+        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab2Id?>" style="display:<?php echo ($fpf_shown_tab==2?"block":"none")?>">    
            <?php //SECTION - Search for albums?>
            <h3>Search for Albums</h3>
            
@@ -298,6 +299,7 @@ function fpf_admin_page()
                 </form>
             </div>
             <?php 
+            //For an old custom addon I implemented for a customer; leave it for backwards-compatilibity.
             if( function_exists('fpf_output_cron_panel') ) fpf_output_cron_panel();
             ?>
             <br clear="all" />
@@ -324,13 +326,18 @@ function fpf_admin_page()
             ?>
         </div><!--end tab-->
         
-        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab3Id?>" style="display:<?php echo ($shownTab==3?"block":"none")?>">
+        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab3Id?>" style="display:<?php echo ($fpf_shown_tab==3?"block":"none")?>">
+            <h3>Addon Options <small>(Version <?php echo FPF_ADDON_VER ?>)</small></h3>
+            <?php do_action('fpf_addon_admin_tab'); ?>
+        </div><!--end tab-->
+                    
+        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab4Id?>" style="display:<?php echo ($fpf_shown_tab==4?"block":"none")?>">
             <h3>Support Information</h3>
             <div style="width:600px;">
             Before submitting a support request, please make sure to carefully read all the documentation and FAQs on the <a href="<?php echo $fpf_homepage; ?>" target="_support">plugin homepage</a>.  Every problem that's ever been reported has a solution posted there.<br /><br />            
-            If you do choose to submit a request, please do so on the <a href="<?php echo $fpf_homepage; ?>" target="_support">plugin homepage</a>, <b><i><u>not</u></i></b> on Wordpress.org (which I rarely check).  Also, be sure to include the following information about your Wordpress hosting environment:<br /><br />
+            If you do choose to submit a request, please do so on the <a href="<?php echo $fpf_homepage; ?>" target="_support">plugin homepage</a>, <b><i><u>not</u></i></b> on Wordpress.org (which I rarely check).  Also, be sure to include the following information about your Wordpress hosting environment:<br />
             </div>
-            <div style="width:600px; padding:5px; margin:2px 0; background-color:#EEEDDA; border:1px solid #CCC;">
+            <div style="width:600px; padding:5px; margin:8px 0; background-color:#EEEDDA; border:1px solid #CCC;">
                 <b>Host URL: </b> <?php echo $_SERVER["HTTP_HOST"] ?><br />
                 <b>Site URL: </b> <?php echo get_bloginfo('url') ?><br />
                 <b>Wordpress URL: </b> <?php echo get_bloginfo('wpurl') ?><br />
@@ -347,18 +354,19 @@ function fpf_admin_page()
                       echo "</small>)<br />"
                 ?>
             </div>
+            
+            <hr />
+            <h3>Donate</h3>
+            Many hours have gone into making this plugin as versatile and easy to use as possible, far beyond my own personal needs. Although I offer it to you freely, please keep in mind that each hour spent extending and supporting it was an hour that could've also gone towards income-generating work. If you find it useful, a small donation would be greatly appreciated.
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                <input type="hidden" name="cmd" value="_s-xclick" />
+                <input type="hidden" name="hosted_button_id" value="L32NVEXQWYN8A" />
+                <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
+                <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+            </form>
+          
         </div><!--end tab-->
-        
-        <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab4Id?>" style="display:<?php echo ($shownTab==4?"block":"none")?>">
-          <h4>Development</h4>
-          Many hours have gone into making this plugin as versatile and easy to use as possible, far beyond my own personal needs. Although I offer it to you freely, please keep in mind that each hour spent extending and supporting it was an hour that could've also gone towards income-generating work. If you find it useful, a small donation would be greatly appreciated.
-          <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-            <input type="hidden" name="cmd" value="_s-xclick" />
-            <input type="hidden" name="hosted_button_id" value="L32NVEXQWYN8A" />
-            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" />
-            <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-          </form>            
-        </div><!--end tab-->
+
         </div><!-- div fpf-admin_wrapper -->
     </div><!-- div wrap -->
     <?php

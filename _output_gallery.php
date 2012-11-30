@@ -96,7 +96,7 @@ function fpf_find_tags($post_content)
     if( preg_match('/hideCred=(\d+)/', $retVal['startTag'], $matches) ) $retVal['hideCred'] = $matches[1]?true:false;
     if( preg_match('/rand=(\d+)/', $retVal['startTag'], $matches) )     $retVal['rand']     = $matches[1];
     if( preg_match('/orderby=(\w+)/', $retVal['startTag'], $matches) )  $retVal['orderby']  = $matches[1];
-    return $retVal;
+    return apply_filters('fpf_parse_params', $retVal);
 }
 
 
@@ -179,7 +179,11 @@ function fpf_fetch_album_content($aid, $params)
     }
     $photos = $photos->data;
     
-    //Store the filename of the album cover when found
+    //Run filters so we can modify the album and photo data
+    $album = apply_filters('fpf_album_data', $album );
+    $photos = apply_filters('fpf_photos_presort', $photos );
+    
+    //Store the filename of the album cover
     //We must do this here, prior to slicing down the array of photos.
     if( isset($album->cover_photo) )
     {
@@ -215,10 +219,13 @@ function fpf_fetch_album_content($aid, $params)
             shuffle($photos);
             $photos = array_slice($photos, 0, $params['rand']);
         }
-    } 
-    $retVal['count'] = count($photos);
+    }
+    
+    //Run a filter so addons can modify/process the photos
+    $photos = apply_filters('fpf_photos_postsort', $photos );
     
     //Create a header with some info about the album
+    $retVal['count'] = count($photos);
     if(!$params['hideHead'])
     {
         $headerTitle  = 'From <a href="' . htmlspecialchars($album->link) . '">' . $album->name . '</a>';
