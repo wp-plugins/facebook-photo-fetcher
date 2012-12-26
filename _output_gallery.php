@@ -255,7 +255,7 @@ function fpf_fetch_album_content($aid, $params)
         $caption = preg_replace("/\r/", "", $caption);
         $caption_with_br = htmlspecialchars(preg_replace("/\n/", "<br />", $caption));
         $caption_no_br = htmlspecialchars(preg_replace("/\n/", " ", $caption));
-        $link = '<a rel="' . $aid . '" class="fbPhoto" href="'.$photo->source . '" title="'.$caption_with_br.' " ><img src="' . $photo->picture . '" alt="" /></a>';
+        $link = '<a rel="' . htmlspecialchars($album->link) . '" class="fbPhoto" href="'.$photo->source . '" title="'.$caption_with_br.' " ><img src="' . $photo->picture . '" alt="" /></a>';
         $retVal['content'] .= "<dl class='gallery-item' style=\"width:$itemwidth%\">";
         $retVal['content'] .= "<dt class='gallery-icon'>$link</dt>";
         if(!$params['hideCaps'])
@@ -278,7 +278,7 @@ function fpf_fetch_album_content($aid, $params)
     {
         $retVal['content'] .= '<script type="text/javascript">//<!--
 		jQuery(document).ready(function() {
-			jQuery("a[rel='.$aid.']").fancybox({
+			jQuery("a[rel*=\''.$aid.'\']").fancybox({
 				"transitionIn"	: "elastic",
 				"transitionOut"	: "elastic",
 				"titlePosition" : "inside",

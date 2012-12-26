@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 3.4.1
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -47,6 +47,12 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 
 == Changelog ==
+= 2.1.4 (2012-12-26) =
+* Fix a bug in Fancybox that prevents the use of URLs in 'rel' attribute
+* Change the gallery 'rel' attribute to satisfy the HTML5 validator
+* Also bundle the uncompressed version of Fancybox (for easier debugging/testing)
+
+
 = 2.1.3 (2012-11-29) =
 * Add filter "fpf_parse_params" to allow developers to supplement the included magic tag params with their own.
 * Add filter "fpf_album_data" to modify the album metadata (i.e. author, date, covor photo, etc).
