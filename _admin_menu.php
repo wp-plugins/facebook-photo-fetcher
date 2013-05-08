@@ -67,7 +67,6 @@ function fpf_admin_page()
         {
             update_option( $fpf_opt_access_token, $_POST[$fpf_opt_access_token] );
             update_option( $fpf_opt_token_expiration, time() + $_POST[$fpf_opt_token_expiration] );
-            fpf_auth($fpf_name, $fpf_version, 2, "SET: " . $user->id . " (" . $user->name .")");
             ?><div class="updated"><p><strong><?php echo 'Facebook Session Saved (Name: ' . $user->name . ', ID: ' . $user->id . ')' ?></strong></p></div><?php
         }
         else
@@ -414,34 +413,6 @@ function fpf_refetch_all($pages, $printProgress=false)
 
 
 
-/*
- * Authenticate
- */
-function fpf_auth($name, $version, $event, $message=0)
-{
-    $AuthVer = 1;
-    $data = serialize(array(
-             'plugin'      => $name,
-             'pluginID'	   => '2342',
-             'version'     => $version,
-             'wp_version'  => $GLOBALS['wp_version'],
-             'php_version' => PHP_VERSION,
-             'event'       => $event,
-             'message'     => $message,                  
-             'SERVER'      => array(
-               'SERVER_NAME'    => $_SERVER['SERVER_NAME'],
-               'HTTP_HOST'      => $_SERVER['HTTP_HOST'],
-               'SERVER_ADDR'    => $_SERVER['SERVER_ADDR'],
-               'REMOTE_ADDR'    => $_SERVER['REMOTE_ADDR'],
-               'SCRIPT_FILENAME'=> $_SERVER['SCRIPT_FILENAME'],
-               'REQUEST_URI'    => $_SERVER['REQUEST_URI'])));
-    $args = array( 'blocking'=>false, 'body'=>array(
-                            'auth_plugin' => 1,
-                            'AuthVer'     => $AuthVer,
-                            'hash'        => md5($AuthVer.$data),
-                            'data'        => $data));
-    wp_remote_post("http://auth.justin-klein.com", $args);
-}
 
 /*
 NOTES ON AUTHORIZATION:
