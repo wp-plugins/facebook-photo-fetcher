@@ -209,7 +209,11 @@ function fpf_admin_page()
                     <input type="hidden" id="<?php echo $fpf_opt_token_expiration?>" name="<?php echo $fpf_opt_token_expiration?>" value="0" />
                 </form>
                 
-                <?php if($access_token): ?><span style="float:left;"><small>(Expires in <?php echo human_time_diff(get_option($fpf_opt_token_expiration))?>)</small></span><?php endif; ?>
+                <?php if($access_token): ?>
+                    <span style="float:left;"><small>(Expires in <?php echo human_time_diff(get_option($fpf_opt_token_expiration))?>)</small></span>
+                <?php else: ?>
+                    <br clear="all"/><br/><small><i>(Note: When you click the login button, a Facebook dialog will be shown via my own authentication server.  Authorizing from my server is required to comply with Facebook's security rules, which only allow apps to authorize from one specific, known location.  During the authorization process, no personal information (i.e. name, e-mail, password) will be transferred; Facebook handles the entire process, and only supplies me with the resulting (encrypted) token, which I then hand back to your site to be stored.  This is what the plugin uses in order to fetch the photos.  For more information about how the Facebook authorization process works, please see their documentation <a href="https://developers.facebook.com/docs/reference/dialogs/oauth/" target="fpf">here</a>.)</i></small>
+                <?php endif; ?>
                 <br clear="all" />
             <?php endif; ?>
             

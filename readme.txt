@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 3.5
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -31,6 +31,7 @@ Features:
 
 For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/projects/facebook-photo-fetcher).
 
+Note: In order to allow this plugin to access your photos, it requires a one-time "phone home" authorization.  This is necessary to comply with Facebook's security rules, which require that apps authorize from a specific, known location.  If you're allergic to "phone home" scripts then you won't be able to use this (or any Facebook app-based) plugin.
 
 == Installation ==
 
@@ -47,6 +48,9 @@ For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/proj
 
 
 == Changelog ==
+= 2.1.8 (2013-05-09) =
+* Add a note about the authorization process (to satisfy wp.org's plugin repo guidelines)
+
 = 2.1.7 (2013-05-07) =
 * Remove activation/deactivation auth
 
