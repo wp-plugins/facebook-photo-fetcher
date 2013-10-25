@@ -29,6 +29,7 @@ add_action('admin_head', 'fpf_admin_styles');
 function fpf_admin_styles()
 {
     echo '<style type="text/css">'.
+            '.fpf-admin_warning     {background-color: #FFEBE8; border:1px solid #C00; padding:0 .6em; margin:10px 0 15px; -khtml-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;}'.
             '.fpf-admin_wrapper     {clear:both; background-color:#FFFEEB; border:1px solid #CCC; padding:0 8px; }'.
             '.fpf-admin_tabs        {width:100%; clear:both; float:left; margin:0 0 -0.1em 0; padding:0;}'.
             '.fpf-admin_tabs li     {list-style:none; float:left; margin:0; padding:0.2em 0.5em 0.2em 0.5em; }'.
@@ -208,6 +209,19 @@ function fpf_admin_page()
                     <input type="hidden" id="<?php echo $fpf_opt_access_token?>" name="<?php echo $fpf_opt_access_token?>" value="0" />
                     <input type="hidden" id="<?php echo $fpf_opt_token_expiration?>" name="<?php echo $fpf_opt_token_expiration?>" value="0" />
                 </form>
+                
+                <?php if (is_ssl() && !$access_token): ?>
+                    <br clear="all" />
+                    <div class="fpf-admin_warning" style="width:70%;">
+                        <b>Note:</b> Your Wordpress admin appears to be running over SSL.  Unfortunately, in order to comply with Facebook's security rules, the FPF authorization may only be performed from my server (since I'm the owner of the app) - thus the button is loaded from my server in an iFrame.  Normally this would appear above, but some recent browser updates have begun to silently block "mixed content" pages from loading.  If you don't see a login button, you'll need temporarily enable mixed content (just on this page).  Not to worry, all transactions with Facebook are still encrypted and secure - it's only my simple "wrapper" script that will be sent over http:<br/>
+                        <ul style="list-style-type:disc;list-style-position:inside;">
+                            <li>In IE10, it will prompt you to "Show all content" at the bottom of the window when you first load this page.  All you need to do is click that button.</li>
+                            <li>In Firefox, click the shield to the left of the URL and select "disable protection on this page" from the drop-down.</li>
+                            <li>In Chrome, there's a similar shield to the right of the URL that lets you "load unsafe content."</li>
+                        </ul>
+                        (If you're reluctant to enable these options, please keep in mind that the vast majority of Wordpress installations do not run over SSL - and thus never see this warning.  All you're doing is giving the browser permission load my iFrame over http, even though the rest of the page is https - <i><u>this was the default behavior for all major browsers until mid-2013</u></i> (i.e. see <a target="link1" href="http://stackoverflow.com/questions/18251128/why-am-i-suddenly-getting-a-blocked-loading-mixed-active-content-issue-in-fire">here </a>for FF &amp; <a target="link2" href="http://productforums.google.com/forum/#!topic/chrome/OrwppKWbKnc">here</a> for Chrome).  And as the Facebook logins themselves <i>always</i> run over SSL, there's really nothing being transmitted in an unsafe way.  For more information on mixed content, please see <a target="link3" href="https://developer.mozilla.org/en-US/docs/Security/MixedContent">here</a>.)
+                    </div>
+                <?php endif; ?>
                 
                 <?php if($access_token): ?>
                     <span style="float:left;"><small>(Expires in <?php echo human_time_diff(get_option($fpf_opt_token_expiration))?>)</small></span>

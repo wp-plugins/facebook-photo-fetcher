@@ -255,7 +255,10 @@ function fpf_fetch_album_content($aid, $params)
         $caption = preg_replace("/\r/", "", $caption);
         $caption_with_br = htmlspecialchars(preg_replace("/\n/", "<br />", $caption));
         $caption_no_br = htmlspecialchars(preg_replace("/\n/", " ", $caption));
-        $link = '<a rel="' . htmlspecialchars($album->link) . '" class="fbPhoto" href="'.$photo->source . '" title="'.$caption_with_br.' " ><img src="' . $photo->picture . '" alt="" /></a>';
+        if ($caption_with_br != '')
+            $link = '<a rel="' . htmlspecialchars($album->link) . '" class="fbPhoto" href="'.$photo->source . '" title="'.$caption_with_br.' " ><img src="' . $photo->picture . '" alt="" /></a>';
+        else
+            $link = '<a rel="' . htmlspecialchars($album->link) . '" class="fbPhoto" href="'.$photo->source . '"><img src="' . $photo->picture . '" alt="" /></a>';
         $retVal['content'] .= "<dl class='gallery-item' style=\"width:$itemwidth%\">";
         $retVal['content'] .= "<dt class='gallery-icon'>$link</dt>";
         if(!$params['hideCaps'])
