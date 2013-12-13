@@ -4,6 +4,11 @@
     text-align: center;
 }
 
+#main #main-content #primary #content .entry-content .gallery .gallery-item{
+    /*For TwentyFourteen theme*/
+   margin: 0;
+}
+
 .gallery-icon img {
     padding:5px;
     background-color:#ffffff;
