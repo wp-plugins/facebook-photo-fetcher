@@ -249,9 +249,20 @@ function fpf_fetch_album_content($aid, $params)
     $retVal['content'] .= "<div class='gallery'>\n";
     foreach($photos as $photo)
     {
-        //Output this photo (must get rid of [], or WP will try to run it as shortcode)
+        //Strip [], or WP will try to run it as shortcode
         $caption = preg_replace("/\[/", "(", $photo->name);
         $caption = preg_replace("/\]/", ")", $caption);
+        
+        //Strip emoji.
+        //Emoji come from FB as surrogate pairs (like "\udbb8\udf2c"), which get converted to UTF8 when we json_decode() the string (see http://stackoverflow.com/questions/17445901/replace-iphone-emoji-in-html-page)
+        //First, strip these (http://apps.timwhitlock.info/emoji/tables/unicode) (Code from: http://stackoverflow.com/questions/12807176/php-writing-a-simple-removeemoji-function)
+        $caption = preg_replace('/[\x{1F600}-\x{1F64F}]/u', '', $caption);
+        $caption = preg_replace('/[\x{1F300}-\x{1F5FF}]/u', '', $caption);
+        $caption = preg_replace('/[\x{1F680}-\x{1F6FF}]/u', '', $caption);
+        //And here are some more (This was the range that was messing up Mark Laurich's albums: https://github.com/adamrocker/Japanese-Mobile-Emoji/blob/master/EmojiData.csv)
+        $caption = preg_replace('/[\x{FE000}-\x{FE4E4}]/u', '', $caption); 
+
+        //Output this photo
         $caption = preg_replace("/\r/", "", $caption);
         $caption_with_br = htmlspecialchars(preg_replace("/\n/", "<br />", $caption));
         $caption_no_br = htmlspecialchars(preg_replace("/\n/", " ", $caption));
