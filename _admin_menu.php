@@ -281,7 +281,7 @@ function fpf_admin_page()
                if(!$search_name) $search_name = "(Unknown User)";
                
                //Get the list of albums
-               $response = fpf_get("https://graph.facebook.com/$search_uid/albums?access_token=$access_token&limit=999&fields=id,link,name");
+               $response = fpf_get("https://graph.facebook.com/$search_uid/albums?access_token=$access_token&limit=999&fields=id,link,name,count");
                $albums = $response->data;
     
                //..And show the list.
@@ -290,7 +290,7 @@ function fpf_admin_page()
                echo "<div class='inside'><small>";
                if( is_array($albums) && count($albums) > 0 )
                    foreach($albums as $album)
-                       echo '&lt;!--'.$fpf_identifier. ' ' . $album->id . ' --&gt;&lt;!--/'.$fpf_identifier.'--&gt; (<a href="'.$album->link.'">'. $album->name .'</a>)<br />';
+                       echo '&lt;!--'.$fpf_identifier. ' ' . $album->id . ' --&gt;&lt;!--/'.$fpf_identifier.'--&gt; (<a href="'.$album->link.'">'. $album->name .'</a>; ' . $album->count . ' photos)<br />';
                else
                    echo "None found.<br />";
                echo "</small></div></div>";

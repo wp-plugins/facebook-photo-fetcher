@@ -164,20 +164,68 @@ function fpf_fetch_album_content($aid, $params)
         return $retVal;
     }
     
-    //Now that we know the album is OK, try to fetch its photos and run some checks on them.
-    $photos = fpf_get("https://graph.facebook.com/$aid/photos?access_token=$access_token&limit=999&fields=name,source,picture");
-    if(!$photos || !isset($photos->data))
+    //Now that we know the album is OK, try to fetch its photos.  Note that as of Feb 2014, it seems like Facebook
+    //won't return more than 100 photos, so I'll have to fetch them in groups of 100...
+    $photos = Array();
+    $photoGroupNum = 0;
+	$debugString = "Trying to fetch $album->count photos in groups of 100...\n";
+	while(true)
+	{
+		//Fetch this group of 100
+		$fetch_url = "https://graph.facebook.com/$aid/photos?access_token=$access_token&limit=100&offset=" . ($photoGroupNum*100) . "&fields=name,source,picture";
+		$photosThisGroup = fpf_get($fetch_url);
+		
+		//Make sure no error
+		if(!$photosThisGroup || !isset($photosThisGroup->data))
+		{
+		    $retVal['content'] = "An unknown error occurred while trying to fetch the photos (empty data).";
+		    return $retVal;
+		}
+		
+		//Just for testing...
+		$debugString .= "**********************************************\n";
+		$debugString .= "Group: " . $photoGroupNum . ": Fetch URL: " . $fetch_url . "\n";
+		$debugString .= "**********************************************\n";
+		$debugCount = 0; foreach($photosThisGroup->data as $photo) $debugString .= ($debugCount++) . ") " . $photo->name . "\n"; 	
+		$debugString .= "\n\n";
+		
+		//If we didn't get any back, we must've already fetched all available photos - break out of this loop.
+		//I don't think this should ever happen, but check just in case (to avoid infinite loop)
+		if(count($photosThisGroup->data) == 0)
+		{
+			$debugString .= "--->Done: No results returned.";
+			break;
+		}
+		
+		//Likewise - just be sure there's no infinite loop.  I'm pretty sure no album will ever have >999 photos.
+		if($photoGroupNum >= 10)
+		{
+			$debugString .= "--->Done: Stopped to prevent infinite loop.";
+			break;
+		}
+		
+		//Tack these results onto our 'main overall' set of photos
+		$photos = array_merge($photos, $photosThisGroup->data);
+		
+		//If we've got the total expected number of photos, we're done - break out of this loop
+		if( count($photos) == $album->count )
+		{
+			$debugString .= "--->Done: Successfully fetched all " . count($photos) . " photos.";
+			break;
+		}
+		
+		//Otherwise, keep going - time for another fetch...
+		$photoGroupNum++;
+	}
+	//$retVal['content'] = "<pre>$debugString</pre>";
+	
+	//Sanity check
+    if(count($photos) != $album->count)
     {
-        $retVal['content'] = "An unknown error occurred while trying to fetch the photos (empty data).";
-        return $retVal;
-    }
-    if(count($photos->data) != $album->count)
-    {
-        $retVal['content'] = "<i>Warning: A size mismatch error occurred while trying to fetch the photos (the album reported $album->count entries, but only " . count($photos->data) . " were returned).</i><br />";
+        $retVal['content'] = "<i>Warning: A size mismatch error occurred while trying to fetch the photos (the album reported $album->count entries, but only " . count($photos) . " were returned).</i><br />";
         //$retVal['content'] .= "Album:\n\nhttps://graph.facebook.com/$aid?access_token=$access_token&fields=id,cover_photo,count,link,name,from,created_time,description\n\n";
         //$retVal['content'] .= "Photos:\n\nhttps://graph.facebook.com/$aid/photos?access_token=$access_token&limit=999&fields=name,source,picture\n\n";
     }
-    $photos = $photos->data;
     
     //Run filters so we can modify the album and photo data
     $album = apply_filters('fpf_album_data', $album );
