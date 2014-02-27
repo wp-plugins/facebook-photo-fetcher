@@ -139,7 +139,8 @@ function fpf_fetch_album_content($aid, $params)
     }
     
     //Try to fetch the album object from Facebook, and check for common errors.
-    $album = fpf_get("https://graph.facebook.com/$aid?access_token=$access_token&fields=id,cover_photo,count,link,name,from,created_time,description");
+    $album_fetch_url = "https://graph.facebook.com/$aid?access_token=$access_token&fields=id,cover_photo,count,link,name,from,created_time,description";
+    $album = fpf_get($album_fetch_url);
     if(!$album || isset($album->error))
     {
         if(!$album)                       $retVal['content'] = "An unknown error occurred while trying to fetch the album (empty reply).";
@@ -165,14 +166,15 @@ function fpf_fetch_album_content($aid, $params)
     }
     
     //Now that we know the album is OK, try to fetch its photos.  Note that as of Feb 2014, it seems like Facebook
-    //won't return more than 100 photos, so I'll have to fetch them in groups of 100...
+    //won't return more than 100 photos, so I'll have to fetch them in paged groups...
     $photos = Array();
     $photoGroupNum = 0;
-	$debugString = "Trying to fetch $album->count photos in groups of 100...\n";
+	$debugString = "Starting to fetch $album->count photos.\nAlbum: <a href='$album_fetch_url'>$album_fetch_url</a>\n";
+	$debugPhotoCount = 0;
+	$fetch_url = "https://graph.facebook.com/$aid/photos?access_token=$access_token&limit=9999&fields=name,source,picture";
 	while(true)
 	{
-		//Fetch this group of 100
-		$fetch_url = "https://graph.facebook.com/$aid/photos?access_token=$access_token&limit=100&offset=" . ($photoGroupNum*100) . "&fields=name,source,picture";
+		//Fetch this group (as many as FB will give us at once...might not be all of them, even though I specify a limit of 9999)
 		$photosThisGroup = fpf_get($fetch_url);
 		
 		//Make sure no error
@@ -184,9 +186,9 @@ function fpf_fetch_album_content($aid, $params)
 		
 		//Just for testing...
 		$debugString .= "**********************************************\n";
-		$debugString .= "Group: " . $photoGroupNum . ": Fetch URL: " . $fetch_url . "\n";
+		$debugString .= "Group: $photoGroupNum\nFetch URL: <a href='$fetch_url'>$fetch_url</a>\nItems: " . count($photosThisGroup->data) . "\n";
 		$debugString .= "**********************************************\n";
-		$debugCount = 0; foreach($photosThisGroup->data as $photo) $debugString .= ($debugCount++) . ") " . $photo->name . "\n"; 	
+		foreach($photosThisGroup->data as $photo) $debugString .= ($debugPhotoCount++) . ") <a href='$photo->source'>$photo->source</a>\n"; 	
 		$debugString .= "\n\n";
 		
 		//If we didn't get any back, we must've already fetched all available photos - break out of this loop.
@@ -197,10 +199,10 @@ function fpf_fetch_album_content($aid, $params)
 			break;
 		}
 		
-		//Likewise - just be sure there's no infinite loop.  I'm pretty sure no album will ever have >999 photos.
-		if($photoGroupNum >= 10)
+		//Likewise - just be sure there's no infinite loop.  I'm pretty sure no album will ever have >2000 photos.
+		if($photoGroupNum >= 20)
 		{
-			$debugString .= "--->Done: Stopped to prevent infinite loop.";
+			$debugString .= "--->Done: Stopped to prevent infinite loop (Limit: 2000 photos).";
 			break;
 		}
 		
@@ -214,18 +216,21 @@ function fpf_fetch_album_content($aid, $params)
 			break;
 		}
 		
-		//Otherwise, keep going - time for another fetch...
+		//If the next 'paging' url isn't specified, it's telling us there are no more photos available - break out of this loop
+		if(!isset($photosThisGroup->paging->next))
+		{
+			$debugString .= "--->Done: Paging->next wasn't set.";
+			break;			
+		}
+		
+		//Otherwise, get the URL to fetch the next group of photos & keep going.
+		$fetch_url = $photosThisGroup->paging->next;
 		$photoGroupNum++;
 	}
-	//$retVal['content'] = "<pre>$debugString</pre>";
+	//echo "<pre>$debugString</pre>";
 	
 	//Sanity check
-    if(count($photos) != $album->count)
-    {
-        $retVal['content'] = "<i>Warning: A size mismatch error occurred while trying to fetch the photos (the album reported $album->count entries, but only " . count($photos) . " were returned).</i><br />";
-        //$retVal['content'] .= "Album:\n\nhttps://graph.facebook.com/$aid?access_token=$access_token&fields=id,cover_photo,count,link,name,from,created_time,description\n\n";
-        //$retVal['content'] .= "Photos:\n\nhttps://graph.facebook.com/$aid/photos?access_token=$access_token&limit=999&fields=name,source,picture\n\n";
-    }
+    //if(count($photos) != $album->count) $retVal['content'] = "<i>Warning: A size mismatch error occurred while trying to fetch the photos (the album reported $album->count entries, but only " . count($photos) . " were returned).</i><br />";
     
     //Run filters so we can modify the album and photo data
     $album = apply_filters('fpf_album_data', $album );
