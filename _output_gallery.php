@@ -299,7 +299,7 @@ function fpf_fetch_album_content($aid, $params)
     $retVal['content'] .= "<!-- ID ". $aid ." Last fetched on " . date('m/d/Y H:i:s') . " v$fpf_version-->\n";
     if( $params['swapHead'] )   $retVal['content'] .= $headerTitle . $headerDesc;
     else                        $retVal['content'] .= $headerDesc . $headerTitle; 
-    $retVal['content'] .= "<div class='gallery'>\n";
+    $retVal['content'] .= "<div class='gallery fpf-gallery'>\n";
     foreach($photos as $photo)
     {
         //Strip [], or WP will try to run it as shortcode
