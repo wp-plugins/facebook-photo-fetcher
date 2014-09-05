@@ -49,7 +49,7 @@ Note: In order to allow this plugin to access your photos, it requires a one-tim
 
 == Changelog ==
 = 2.1.16 (2014-09-05) =
-* Tested with WP 4.0
+* Tested with WP 4.0 
 * Fixed incorrect line-wrapping on TwentyThirteen theme
 * Added a more explicit class "fpf-gallery" around galleries, for CSS styling.
 * NOTE: If your album styling gets messed up after this update, just use the admin panel to "Re-Fetch" all albums, which add the new CSS class and get them working as before.
