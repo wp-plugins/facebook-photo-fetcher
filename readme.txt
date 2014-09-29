@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
 Tested up to: 4.0
-Stable tag: 2.1.16
+Stable tag: 2.1.17
 
 Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
 
@@ -48,6 +48,9 @@ Note: In order to allow this plugin to access your photos, it requires a one-tim
 
 
 == Changelog ==
+= 2.1.17 (2014-09-28) =
+* Fix HTML validation issue caused by Facebook's new photo URL scheme
+
 = 2.1.16 (2014-09-05) =
 * Tested with WP 4.0 
 * Fixed incorrect line-wrapping on TwentyThirteen theme
