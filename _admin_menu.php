@@ -83,7 +83,7 @@ function fpf_admin_page()
     }
     else if( isset($_POST[$fpf_opt_last_uid_search]) )    //User clicked "Search," which saves 'last searched uid'
     {
-        update_option( $fpf_opt_last_uid_search, $_POST[ $fpf_opt_last_uid_search ] );
+        update_option( $fpf_opt_last_uid_search, esc_html($_POST[ $fpf_opt_last_uid_search ]) );
         ?><div class="updated"><p><strong><?php echo 'Album search completed.'?></strong></p></div><?php
     }
 	else 												//Allow optional addons to perform actions
