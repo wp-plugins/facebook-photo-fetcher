@@ -50,7 +50,7 @@ Note: In order to allow this plugin to access your photos, it requires a one-tim
 == Changelog ==
 = 2.1.19 (2014-12-22) =
 * Fix CSS issue with TwentyFourteen theme
-* Tested on WP4.1
+* Tested on WP4.1 
 
 = 2.1.18 (2014-11-27) =
 * Fix potential vulneratility an unescaped option in the admin panel
