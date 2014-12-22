@@ -28,11 +28,12 @@
 }
 
 #main .content-area .site-content .fpf-gallery .gallery-item{
-    /*Fix for TwentyThirteen theme*/
+    /*Fix for TwentyThirteen & TwentyFourteen*/
    margin: 0;
 }
 
-#main #main-content #primary #content .entry-content .fpf-gallery .gallery-item{
-    /*Fix for TwentyFourteen theme*/
-   margin: 0;
+#main #main-content #primary #content .entry-content .fpf-gallery{
+/*Fix for TwentyFourteen (has too small of a max-width for the content area)*/
+	margin-left: -50px;
+	margin-right: -50px;
 }
