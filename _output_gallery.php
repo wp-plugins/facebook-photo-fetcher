@@ -128,6 +128,7 @@ function fpf_fetch_album_content($aid, $params)
     $itemwidth = $params['cols'] > 0 ? floor(100/$params['cols']) : 100;
     $itemwidth -= (0.5/$params['cols']); //For stupid IE7, which rounds fractional percentages UP (shave off 0.5%, or the last item will wrap to the next row)
     $retVal = Array();
+    $retVal['content'] = "";
     
     //Get our saved access token (and make sure it exists) 
     global $fpf_opt_access_token;
@@ -290,8 +291,8 @@ function fpf_fetch_album_content($aid, $params)
         if( $retVal['count'] < $album->count) $headerTitle .= ' (Showing ' . $retVal['count'] . ' of ' . $album->count . " items)\n";
         else                                  $headerTitle .= ' (' . $retVal['count'] . " items)\n";
         $headerTitle .= '<br /><br />';            
-        if( $album->description ) $headerDesc = '"'.$album->description.'"<br /><br />'."\n";
-        else                      $headerDesc = "";
+        if( isset($album->description) ) $headerDesc = '"'.$album->description.'"<br /><br />'."\n";
+        else                             $headerDesc = "";
     } 
 
     //Output the album!  Starting with a (hidden) timestamp, then the header, then each photo.
@@ -300,9 +301,11 @@ function fpf_fetch_album_content($aid, $params)
     if( $params['swapHead'] )   $retVal['content'] .= $headerTitle . $headerDesc;
     else                        $retVal['content'] .= $headerDesc . $headerTitle; 
     $retVal['content'] .= "<div class='gallery fpf-gallery'>\n";
+    $i = 0;
     foreach($photos as $photo)
     {
         //Strip [], or WP will try to run it as shortcode
+        if(!isset($photo->name)) $photo->name = "";
         $caption = preg_replace("/\[/", "(", $photo->name);
         $caption = preg_replace("/\]/", ")", $caption);
         

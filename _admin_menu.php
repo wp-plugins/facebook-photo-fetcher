@@ -144,7 +144,7 @@ function fpf_admin_page()
     <div class="fpf-admin_wrapper">
         <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab1Id?>" style="display:<?php echo ($fpf_shown_tab==1?"block":"none")?>">
             <h3>Overview</h3>
-            This plugin allows you to create Wordpress photo galleries from any Facebook album you can access.<br /><br />
+            This plugin allows you to create Wordpress photo galleries from Facebook albums.<br /><br />
             To get started, you must first connect with your Facebook account using the button below.  Once connected, you can create a gallery by making a new Wordpress post or page and pasting in one line of special HTML, like this:<br /><br />
             <b>&lt;!--<?php echo $fpf_identifier?> 1234567890123456789 --&gt;&lt;!--/<?php echo $fpf_identifier?>--&gt;</b><br /><br />
             Whenever you save a post or page containing these tags, this plugin will automatically download the album information and insert its contents between them.  You are free to include any normal content you like before or after, as usual.<br /><br />
@@ -260,11 +260,15 @@ function fpf_admin_page()
 
         <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab2Id?>" style="display:<?php echo ($fpf_shown_tab==2?"block":"none")?>">    
            <?php //SECTION - Search for albums?>
+           
+           <?php if( !get_option($fpf_opt_access_token) ):
+                    echo "<h3>Utilities</h3>Please use the 'Facebook Setup' tab to authorize your Facebook account.<br /><br/>";
+                 else: ?>
            <h3>Search for Albums</h3>
            
            <form name="listalbums" method="post" action="">
                To get a list of album IDs that you can use to create galleries, enter a Facebook Page or User ID below and click "Search."<br /><br />
-               Your User ID is <b><?php echo $user->id?></b>.  To get a friend or page's ID, click on one of their photos - the URL will be something like <b>facebook.com/photo.php?fbid=012&amp;set=a.345.678.900</b>. The last set of numbers (900 in this example) is their ID.<br /><br /> 
+               Your User ID is <b><?php echo $user->id?></b>.  To get a page's ID, view any of its photos on Facebook - the URL will be something like <b>facebook.com/photos/a.123.456.789</b>. The last set of numbers (789 in this example) is the ID.<br /><br /> 
                <input type="text" name="<?php echo $fpf_opt_last_uid_search?>" value="<?php echo get_option($fpf_opt_last_uid_search)?>" size="20">
                <input type="submit" class="button-secondary"  name="Submit" value="Search" />
            </form>
@@ -341,10 +345,12 @@ function fpf_admin_page()
                     echo "</pre></div>";
                 }
             ?>
+            
+            <?php endif; //If not authorized ?>
         </div><!--end tab-->
         
         <div class="<?php echo $allTabsClass ?>" id="<?php echo $tab3Id?>" style="display:<?php echo ($fpf_shown_tab==3?"block":"none")?>">
-            <h3>Addon Options <small>(Version <?php echo FPF_ADDON_VER ?>)</small></h3>
+            <h3>Addon Options <small>(Version <?php echo defined('FPF_ADDON_VER')?FPF_ADDON_VER:"?" ?>)</small></h3>
             <?php do_action('fpf_addon_admin_tab'); ?>
         </div><!--end tab-->
                     
@@ -361,7 +367,7 @@ function fpf_admin_page()
                 <b>Wordpress Version:</b> <?php echo $GLOBALS['wp_version']; ?><br />
                 <b>Plugin Version:</b> <?php echo $fpf_version ?><br />
                 <b>Browser:</b> <?php echo $_SERVER['HTTP_USER_AGENT'] ?><br /> 
-                <b>Theme:</b> <?php echo get_current_theme(); ?><br />
+                <b>Theme:</b> <?php echo wp_get_theme(); ?><br />
                 <b>Server:</b> <?php echo substr($_SERVER['SERVER_SOFTWARE'], 0, 45) . (strlen($_SERVER['SERVER_SOFTWARE'])>45?"...":""); ?><br />
                 <b>Active Plugins:</b> 
                 <?php $active_plugins = get_option('active_plugins');

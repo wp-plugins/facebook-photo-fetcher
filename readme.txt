@@ -3,19 +3,16 @@ Contributors: Justin_K
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L32NVEXQWYN8A
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
-Tested up to: 4.1
-Stable tag: 2.1.19
+Tested up to: 4.2.1
+Stable tag: 2.2.0
 
-Allows you to automatically create Wordpress photo galleries from any Facebook album you can access.  Simple to use and highly customizable.
-
+Allows you to automatically create Wordpress photo galleries from Facebook albums.  Simple to use and highly customizable.
 
 == Description ==
 
-This plugin allows you to quickly and easily generate Wordpress photo galleries from any Facebook album you can access.
+This plugin allows you to quickly and easily generate Wordpress photo galleries from Facebook albums.  
 
-The idea was inspired by [Fotobook](http://wordpress.org/extend/plugins/fotobook/), though its approach is fundamentally different: while Fotobook's emphasis is on automation, this plugin allows a great deal of customization. With it you can create galleries in any Post or Page you like, right alongside your regular content. You do this simply by putting a "magic HTML tag" in the post's content - much like [Wordpress Shortcode](http://codex.wordpress.org/Gallery_Shortcode). Upon saving, the tag will automatically be populated with the Facebook album content. Presentation is fully customizable via parameters to the "magic tag" - you can choose to show only a subset of an album's photos, change the number of photos per column, show photo captions, and more.
-
-Also, Facebook Photo Fetcher does not limit you to just your own albums: you can create galleries from friends and fanpages as well. This is very handy if you're not the main photo-poster in your social circle: just let your friend or family upload all those wedding pics, then import them directly to your blog!
+The idea was inspired by [Fotobook](http://wordpress.org/extend/plugins/fotobook/), though its approach is fundamentally different: while Fotobook's emphasis is on automation, this plugin allows a great deal of customization.  With it you can create galleries in any Post or Page you like, right alongside your regular content. You do this simply by putting a "magic HTML tag" in the post's content - much like [Wordpress Shortcode](http://codex.wordpress.org/Gallery_Shortcode). Upon saving, the tag will instantly be populated with the Facebook album content. Presentation is fully customizable via parameters to the "magic tag" - you can choose to show only a subset of an album's photos, change the number of photos per column, show photo captions, and more.  Plus, Facebook Photo Fetcher doesn't limit you to just your own albums: it can create galleries from fanpages as well.
 
 Features:
 
@@ -25,8 +22,6 @@ Features:
 * Simple PHP template function allows programmers to manually embed albums in any template or widget.
 * Built-in LightBox: Photos appear in attractive pop-up overlays without the need for any other plugins.
 * Admin panel handles all the setup for you: Just login and you're ready to start making albums.
-* Admin panel includes a utility to search for albums you can access (and use to create galleries).
-* Admin panel includes a utility to auto-traverse all your posts and pages, updating albums that may've changed on Facebook.
 * No custom database tables required; galleries live in regular post content.
 
 For a Demo Gallery, see the [plugin's homepage](http://www.justin-klein.com/projects/facebook-photo-fetcher).
@@ -48,9 +43,18 @@ Note: In order to allow this plugin to access your photos, it requires a one-tim
 
 
 == Changelog ==
+= 2.2.0 (2015-04-29) =
+* Updated the Facebook app to Graph API v2.0.  Please let me know if you encounter any issues!
+* Revised wording in the readme & admin panel.  As of April 30 2015, Facebook has removed the permissions necessary to access friends' data - meaning no more "ability to fetch _any_ album you can access."  See [here](https://developers.facebook.com/docs/apps/upgrading) for more info.
+* Fix NOTICEs when accessing the admin panel if WP_DEBUG is defined
+* Fix NOTICEs when fetching albums if WP_DEBUG is defined
+* Fix deprecated function in the admin panel
+* Hide contents of the Utilities tab when no access token is present
+* Tested with WP 4.2.1
+
 = 2.1.19 (2014-12-22) =
 * Fix CSS issue with TwentyFourteen theme
-* Tested on WP4.1 
+* Tested on WP4.1
 
 = 2.1.18 (2014-11-27) =
 * Fix potential vulneratility an unescaped option in the admin panel
