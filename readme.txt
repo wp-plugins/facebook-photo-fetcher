@@ -3,8 +3,8 @@ Contributors: Justin_K
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L32NVEXQWYN8A
 Tags: facebook, photos, images, pictures, gallery, albums, fotobook, media
 Requires at least: 2.5
-Tested up to: 4.2.1
-Stable tag: 2.2.0
+Tested up to: 4.2.3
+Stable tag: 2.2.1
 
 Allows you to automatically create Wordpress photo galleries from Facebook albums.  Simple to use and highly customizable.
 
@@ -43,6 +43,10 @@ Note: In order to allow this plugin to access your photos, it requires a one-tim
 
 
 == Changelog ==
+= 2.2.1 (2015-07-29) =
+* IMPORTANT: Wordpress 4.2.3 will break the lightboxes in all your existing galleries.  To get them working again, please use the "re-fetch all" option in the admin panel after updating this plugin; your lightboxes will work again *after* they've been re-fetched.
+* Add a new "hideDesc" parameter, to hide only the description portion of the header
+
 = 2.2.0 (2015-04-29) =
 * Updated the Facebook app to Graph API v2.0.  Please let me know if you encounter any issues!
 * Revised wording in the readme & admin panel.  As of April 30 2015, Facebook has removed the permissions necessary to access friends' data - meaning no more "ability to fetch _any_ album you can access."  See [here](https://developers.facebook.com/docs/apps/upgrading) for more info.
