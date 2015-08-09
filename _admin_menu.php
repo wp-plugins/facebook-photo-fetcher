@@ -426,7 +426,7 @@ function fpf_refetch_all($pages, $printProgress=false)
             $outputString .= "Found!\n<b>.........Fetching......";
             if($printProgress) { echo $outputString; $outputString = ""; }
             wp_insert_post( $page );
-            $fetchCount = get_post_meta($page->ID, '_fb_album_size', true);
+            $fetchCount = get_post_meta($page->ID, '_fpf_album_size', true);
             if(!$fetchCount) $fetchCount = "0";
             $outputString .= $fetchCount . " photos fetched.</b>\n";
         }
